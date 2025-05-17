@@ -12,6 +12,7 @@ private:
     void validate() const;
 
 public:
+	Hour();
     Hour(int h, int m);
 
     int getHour() const;

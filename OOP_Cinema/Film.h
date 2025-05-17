@@ -49,6 +49,5 @@ public:
     void setDate(const Date& newDate);
     void setStartTime(const Hour& newStartTime);
 
-    bool hasPassed(const Date& currentDate, const Hour& currentTime) const;
-    void printInfo() const;
+    virtual void printInfo() const ;
 };

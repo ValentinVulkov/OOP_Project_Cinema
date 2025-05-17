@@ -81,13 +81,7 @@ void Film::setStartTime(const Hour& newStartTime) {
     endTime = startTime + length;
 }
 
-// Utility methods implementation
-bool Film::hasPassed(const Date& currentDate, const Hour& currentTime) const {
-    return (date < currentDate) ||
-        (date == currentDate && endTime < currentTime);
-}
-
-void Film::printInfo() const {
+void Film::printInfo() const  {
     std::cout << "Title: " << title << "\n"
         << "Rating: " << rating << "\n"
         << "Length: " << length << " minutes\n"

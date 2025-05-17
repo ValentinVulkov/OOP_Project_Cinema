@@ -1,5 +1,9 @@
 #include "Hour.h"
 
+Hour::Hour() : hour(0), minute(0)
+{
+}
+
 Hour::Hour(int h, int m) : hour(h), minute(m) {
     validate();
 }

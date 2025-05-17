@@ -15,6 +15,7 @@ private:
     void validate() const;
 
 public:
+    Date();
     Date(int d, int m, int y);
 
     // Getters
