@@ -127,11 +127,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Date.cpp" />
+    <ClCompile Include="Film.cpp" />
+    <ClCompile Include="Hour.cpp" />
     <ClCompile Include="Login.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyString.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Date.h" />
+    <ClInclude Include="Film.h" />
+    <ClInclude Include="Hour.h" />
     <ClInclude Include="Login.h" />
     <ClInclude Include="MyString.h" />
   </ItemGroup>
