@@ -9,22 +9,22 @@ enum class Genre {
     DocumentaryMovie
 };
 
-class Film {
+class Movie {
 private:
     MyString title;
     double rating;
     unsigned length; // in minutes
     unsigned year;
     Genre genre;
-    unsigned room;
+    unsigned room;          //TODO
     Date date;
     Hour startTime;
     Hour endTime;
 
 public:
 
-    Film();
-    Film(const MyString& title, double rating, unsigned length,
+    Movie();
+    Movie(const MyString& title, double rating, unsigned length,
         unsigned year, Genre genre, unsigned room,
         const Date& date, const Hour& startTime);
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "Film.h"
+#include "Movie.h"
 #include "Date.h"
 #include "Hour.h"
 
@@ -7,7 +7,7 @@ constexpr unsigned DEFAULT_ACTIONMOVIE_PRICE = 9;
 constexpr unsigned MAX_ACTIONMOVIE_INTENSITY = 20;
 constexpr double INTENSITY_PRICE_MULTIPLIER = 1.5;
 
-class ActionMovie : public Film {
+class ActionMovie : public Movie {
 private:
     unsigned actionIntensity; 
 

@@ -1,10 +1,10 @@
 #pragma once
-#include "Film.h"
+#include "Movie.h"
 
 constexpr unsigned DEFAULT_DRAMAMOVIE_PRICE = 7;
 constexpr unsigned COMEDY_ELEMENTS_ADDON = 3;
 
-class DramaMovie : public Film
+class DramaMovie : public Movie
 {
 	bool hasComedyElements;
 public:

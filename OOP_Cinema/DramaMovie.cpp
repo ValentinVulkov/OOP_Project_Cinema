@@ -1,11 +1,11 @@
 #include "DramaMovie.h"
-#include "Film.h"
+#include "Movie.h"
 
 DramaMovie::DramaMovie()
-    : Film("Untitled", 0.0, 0, 0, Genre::DramaMovie, 0, Date(), Hour()), hasComedyElements(0) {}
+    : Movie("Untitled", 0.0, 0, 0, Genre::DramaMovie, 0, Date(), Hour()), hasComedyElements(0) {}
 
 DramaMovie::DramaMovie(const MyString& title, double rating, unsigned length, unsigned year, unsigned room, const Date& date, const Hour& startTime, bool comedyElements)
-: Film(title, rating, length, year, Genre::ActionMovie, room, date, startTime),
+: Movie(title, rating, length, year, Genre::ActionMovie, room, date, startTime),
 hasComedyElements(comedyElements)
 {
 
@@ -36,7 +36,7 @@ double DramaMovie::calculatePrice() const
 void DramaMovie::printInfo() const
 {
 	std::cout << "=== Drama Movie ===\n";
-	Film::printInfo();
+	Movie::printInfo();
 	std::cout << "Comedy Elements: " << (hasComedyElements ? "Yes" : "No") << "\n"
 		<< "Ticket Price: " << calculatePrice() << " BGN\n";
 }

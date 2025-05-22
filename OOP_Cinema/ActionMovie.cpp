@@ -2,13 +2,13 @@
 #include <stdexcept>
 
 ActionMovie::ActionMovie()
-    : Film("Untitled", 0.0, 0, 0, Genre::ActionMovie, 0, Date(), Hour()), actionIntensity(0) {}
+    : Movie("Untitled", 0.0, 0, 0, Genre::ActionMovie, 0, Date(), Hour()), actionIntensity(0) {}
 
 
 ActionMovie::ActionMovie(const MyString& title, double rating, unsigned length,
     unsigned year, unsigned room, const Date& date,
     const Hour& startTime, unsigned intensity)
-    : Film(title, rating, length, year, Genre::ActionMovie, room, date, startTime),
+    : Movie(title, rating, length, year, Genre::ActionMovie, room, date, startTime),
     actionIntensity(intensity)
 {
     if (intensity > MAX_ACTIONMOVIE_INTENSITY) {
@@ -34,7 +34,7 @@ double ActionMovie::calculatePrice() const {
 
 void ActionMovie::printInfo() const {
     std::cout << "=== Action Movie ===\n";
-    Film::printInfo();
+    Movie::printInfo();
     std::cout << "Action Intensity: " << actionIntensity << "/20\n"
         << "Ticket Price: " << calculatePrice() << " BGN\n";
 }

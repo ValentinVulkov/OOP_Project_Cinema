@@ -1,10 +1,10 @@
 #pragma once
-#include "Film.h"
+#include "Movie.h"
 
 constexpr unsigned DEFAULT_DOCUMENTARYMOVIE_PRICE = 5;
 constexpr unsigned TRUE_EVENTS_ADDON = 2;
 
-class DocumentaryMovie : public Film
+class DocumentaryMovie : public Movie
 {
 	MyString theme;
 	bool isBasedOnTrueEvents;

@@ -131,21 +131,31 @@
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="DocumentaryMovie.cpp" />
     <ClCompile Include="DramaMovie.cpp" />
-    <ClCompile Include="Film.cpp" />
+    <ClCompile Include="Movie.cpp" />
     <ClCompile Include="Hour.cpp" />
     <ClCompile Include="Login.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyString.cpp" />
+    <ClCompile Include="Room.cpp" />
+    <ClCompile Include="RoomManager.cpp" />
+    <ClCompile Include="Seat.cpp" />
+    <ClCompile Include="Ticket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionMovie.h" />
     <ClInclude Include="Date.h" />
     <ClInclude Include="DocumentaryMovie.h" />
     <ClInclude Include="DramaMovie.h" />
-    <ClInclude Include="Film.h" />
+    <ClInclude Include="Movie.h" />
     <ClInclude Include="Hour.h" />
     <ClInclude Include="Login.h" />
     <ClInclude Include="MyString.h" />
+    <ClInclude Include="MyVector.hpp" />
+    <ClInclude Include="Room.h" />
+    <ClInclude Include="RoomManager.h" />
+    <ClInclude Include="RowAndCol.h" />
+    <ClInclude Include="Seat.h" />
+    <ClInclude Include="Ticket.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Accounts.txt" />

@@ -1,12 +1,12 @@
 #include "DocumentaryMovie.h"
 
-DocumentaryMovie::DocumentaryMovie() : Film(), theme(), isBasedOnTrueEvents(false)
+DocumentaryMovie::DocumentaryMovie() : Movie(), theme(), isBasedOnTrueEvents(false)
 {
 }
 
 DocumentaryMovie::DocumentaryMovie(const MyString& title, double rating, unsigned length, unsigned year, unsigned room, const Date& date, 
 const Hour& startTime, const MyString& theme, bool isBasedOnTrueEvents) 
-: Film(title, rating, length, year, Genre::DocumentaryMovie, room, date, startTime), theme(theme), isBasedOnTrueEvents(isBasedOnTrueEvents)
+: Movie(title, rating, length, year, Genre::DocumentaryMovie, room, date, startTime), theme(theme), isBasedOnTrueEvents(isBasedOnTrueEvents)
 {
 }
 
@@ -47,7 +47,7 @@ double DocumentaryMovie::calculatePrice() const
 void DocumentaryMovie::printInfo() const
 {
 	std::cout << "=== Documentary Movie ===\n";
-	Film::printInfo();
+	Movie::printInfo();
 	std::cout << "Theme: " << theme << "\n"
 		<< "Based on True Events: " << (isBasedOnTrueEvents ? "Yes" : "No") << "\n"
 		<< "Ticket Price: " << calculatePrice() << " BGN\n";
