@@ -15,13 +15,14 @@ public:
     ActionMovie();
 
     ActionMovie(const MyString& title, double rating, unsigned length,
-        unsigned year, unsigned room, const Date& date,
-        const Hour& startTime, unsigned intensity);
+        unsigned year, Room room, const Date& date,
+        const Hour& startTime, MyVector<Rating> ratings, unsigned intensity);
 
     unsigned getIntensity() const;
     void setIntensity(unsigned newIntensity);
 
     double calculatePrice() const;
     void printInfo() const override;
+	~ActionMovie() override = default;
 };
 

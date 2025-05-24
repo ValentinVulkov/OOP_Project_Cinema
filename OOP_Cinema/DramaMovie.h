@@ -11,13 +11,14 @@ public:
     DramaMovie();
 
     DramaMovie(const MyString& title, double rating, unsigned length,
-        unsigned year, unsigned room, const Date& date,
-        const Hour& startTime, bool comedyElements);
+        unsigned year, Room room, const Date& date,
+        const Hour& startTime, bool comedyElements, MyVector<Rating> ratings);
 
     bool getHasComedyElements() const;
     void setHasComedyElements(bool hasComedyElements);
 
     double calculatePrice() const;
     void printInfo() const override;
+	~DramaMovie() override = default;
 };
 

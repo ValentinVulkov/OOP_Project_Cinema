@@ -19,4 +19,5 @@ public:
     public:
         InvalidIDException(const char* msg) : std::runtime_error(msg) {}
     };
+	~RoomManager() = default;
 };

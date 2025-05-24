@@ -1,14 +1,17 @@
 #include "DramaMovie.h"
 #include "Movie.h"
 
-DramaMovie::DramaMovie()
-    : Movie("Untitled", 0.0, 0, 0, Genre::DramaMovie, 0, Date(), Hour()), hasComedyElements(0) {}
 
-DramaMovie::DramaMovie(const MyString& title, double rating, unsigned length, unsigned year, unsigned room, const Date& date, const Hour& startTime, bool comedyElements)
-: Movie(title, rating, length, year, Genre::ActionMovie, room, date, startTime),
-hasComedyElements(comedyElements)
+
+
+DramaMovie::DramaMovie() : Movie(), hasComedyElements(false)
 {
+}
 
+DramaMovie::DramaMovie(const MyString& title, double rating, unsigned length, unsigned year, Room room, const Date& date, const Hour& startTime, bool comedyElements, MyVector<Rating> ratings)
+	:Movie(title, length, year, Genre::DramaMovie, room, date, startTime, ratings)
+{
+	setHasComedyElements(comedyElements);
 }
 
 bool DramaMovie::getHasComedyElements() const

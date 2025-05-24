@@ -3,7 +3,6 @@
 #include "Seat.h"
 #include "RoomManager.h"
 
-//Setters not implemented
 
  
 class Room {
@@ -11,30 +10,22 @@ private:
     unsigned ID;
     unsigned rows;
     unsigned cols;
-    MyVector<MyVector<Seat*>> seats;  // 2D vector of seats
+	MyVector<MyVector<Seat>> seats;
 
 public:
-    Room(unsigned numRows, unsigned numCols);
-    ~Room();
+    Room();
+	explicit Room(unsigned rows, unsigned cols);
 
-    // Delete copy operations
-    Room(const Room&) = delete;
-    Room& operator=(const Room&) = delete;
+    unsigned getID() const;
+    unsigned getRows() const;
+    unsigned getCols() const;
+    const MyVector<MyVector<Seat>>& getSeats() const;
 
-    // Move operations
-    Room(Room&& other) noexcept;
-    Room& operator=(Room&& other) noexcept;
+    void setRows(unsigned rows);
+    void setCols(unsigned cols);
 
-    // Accessors
-    unsigned getID() const { return ID; }
-    unsigned getRows() const { return rows; }
-    unsigned getCols() const { return cols; }
-    unsigned getTotalSeats() const { return rows * cols; }
-
-    Seat* getSeat(unsigned row, unsigned col) const;
-    void close();
-
-private:
-    void initializeSeats();
-    void cleanupSeats();
+    Seat& getSeat(unsigned row, unsigned col);
+    const Seat& getSeat(unsigned row, unsigned col) const;
+	~Room();
 };
+   

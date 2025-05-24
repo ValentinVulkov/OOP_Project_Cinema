@@ -27,6 +27,7 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const Hour& h);
     friend std::istream& operator>>(std::istream& is, Hour& h);
+	~Hour() = default;
 };
 
 #endif // HOUR_H

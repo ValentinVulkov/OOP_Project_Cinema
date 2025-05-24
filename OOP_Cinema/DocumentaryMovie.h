@@ -12,8 +12,10 @@ class DocumentaryMovie : public Movie
 public:
 	DocumentaryMovie();
 	DocumentaryMovie(const MyString& title, double rating, unsigned length,
-		unsigned year, unsigned room, const Date& date,
-		const Hour& startTime, const MyString& theme, bool isBasedOnTrueEvents);
+		unsigned year, Room room, const Date& date,
+		const Hour& startTime, MyVector<Rating> ratings, const MyString& theme, bool isBasedOnTrueEvents);
+
+	// Getters and Setters
 
 	MyString getTheme() const;
 	void setTheme(const MyString& newTheme);
@@ -22,5 +24,6 @@ public:
 
 	double calculatePrice() const;
 	void printInfo() const override;
+	~DocumentaryMovie() override = default;
 };
 

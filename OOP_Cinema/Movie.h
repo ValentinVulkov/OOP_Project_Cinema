@@ -2,6 +2,8 @@
 #include "MyString.h"
 #include "Date.h"
 #include "Hour.h"
+#include "Rating.h"
+#include "Room.h"
 
 enum class Genre {
     ActionMovie,
@@ -12,42 +14,49 @@ enum class Genre {
 class Movie {
 private:
     MyString title;
-    double rating;
     unsigned length; // in minutes
     unsigned year;
     Genre genre;
-    unsigned room;          //TODO
+    Room room;          
     Date date;
     Hour startTime;
     Hour endTime;
+	MyVector<Rating> ratings; // List of ratings for the movie
+	double averageRating; // Average rating of the movie
 
 public:
 
     Movie();
-    Movie(const MyString& title, double rating, unsigned length,
-        unsigned year, Genre genre, unsigned room,
-        const Date& date, const Hour& startTime);
+    Movie(const MyString& title, unsigned length,
+        unsigned year, Genre genre, Room room,
+        const Date& date, const Hour& startTime, MyVector<Rating> ratings);
 
     // Getters
     const MyString& getTitle() const;
-    double getRating() const;
     unsigned getLength() const;
     unsigned getYear() const;
     Genre getGenre() const;
-    unsigned getRoom() const;
+    Room getRoom() const;
     const Date& getDate() const;
     const Hour& getStartTime() const;
     const Hour& getEndTime() const;
+	const MyVector<Rating>& getRatings() const;
+	const double getAverageRating() const;
 
     // Setters
     void setTitle(const MyString& newTitle);
-    void setRating(double newRating);
     void setLength(unsigned newLength);
     void setYear(unsigned newYear);
     void setGenre(Genre newGenre);
-    void setRoom(unsigned newRoom);
+    void setRoom(Room newRoom);
     void setDate(const Date& newDate);
     void setStartTime(const Hour& newStartTime);
+	void setRatings(const MyVector<Rating> ratings);
+
+	double calculateAverageRating(const MyVector<Rating>& ratings) const;
+
+    void addRating(const Rating& rating);
 
     virtual void printInfo() const ;
+	virtual ~Movie() = default;
 };

@@ -1,42 +1,25 @@
 #pragma once
 #include "Movie.h"
-#include "RowAndCol.h"  // Separate the RowAndCol struct
+#include "Seat.h"
 
-// Forward declarations to break circular dependencies
+// Forward declarations
 class Room;
 class Seat;
 
-class Ticket
-{
+class Ticket {
     Movie movie;
-    const Room* room;  // Pointer to avoid ownership issues
-    unsigned seatNumber;
-    RowAndCol seatPosition;
-    bool isReserved;
+    Seat seat;
 
 public:
-    Ticket();
-    Ticket(const Movie& movie, const Room& room, unsigned seatNumber, bool isReserved = false);
+	Ticket();
+	Ticket(const Movie& movie, const Seat& seat);
 
-    // Setters
-    void setMovie(const Movie& movie);
-    void setRoom(const Room& room);
-    void setSeatNumber(unsigned seatNumber);
-    void setIsReserved(bool isReserved);
+	const Movie& getMovie() const;
+	const Seat& getSeat() const;
 
-    // Getters
-    const Movie& getMovie() const { return movie; }
-    const Room& getRoom() const { return *room; }
-    unsigned getSeatNumber() const { return seatNumber; }
-    RowAndCol getSeatPosition() const { return seatPosition; }
-    bool getIsReserved() const { return isReserved; }
+	void setMovie(const Movie& movie);
+	void setSeat(const Seat& seat);
 
-    // Operations
-    void reserveSeat() { isReserved = true; }
-    void releaseSeat() { isReserved = false; }
-    void printTicketInfo() const;
-
-private:
-    RowAndCol calculateSeatPosition(unsigned seatNumber) const;
+	void printTicketInfo() const;
+	~Ticket() = default;
 };
-

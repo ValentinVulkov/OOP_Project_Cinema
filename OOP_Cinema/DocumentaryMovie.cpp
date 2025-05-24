@@ -4,12 +4,13 @@ DocumentaryMovie::DocumentaryMovie() : Movie(), theme(), isBasedOnTrueEvents(fal
 {
 }
 
-DocumentaryMovie::DocumentaryMovie(const MyString& title, double rating, unsigned length, unsigned year, unsigned room, const Date& date, 
-const Hour& startTime, const MyString& theme, bool isBasedOnTrueEvents) 
-: Movie(title, rating, length, year, Genre::DocumentaryMovie, room, date, startTime), theme(theme), isBasedOnTrueEvents(isBasedOnTrueEvents)
+DocumentaryMovie::DocumentaryMovie(const MyString& title, double rating, unsigned length, unsigned year, Room room, const Date& date, const Hour& startTime, MyVector<Rating> ratings, const MyString& theme, bool isBasedOnTrueEvents)
+	:Movie(title, length, year, Genre::DocumentaryMovie, room, date, startTime, ratings)
 {
-}
+	setTheme(theme);
+	setIsBasedOnTrueEvents(isBasedOnTrueEvents);
 
+}
 
 MyString DocumentaryMovie::getTheme() const
 {

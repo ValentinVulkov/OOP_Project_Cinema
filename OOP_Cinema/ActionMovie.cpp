@@ -1,20 +1,18 @@
 #include "ActionMovie.h"
 #include <stdexcept>
 
-ActionMovie::ActionMovie()
-    : Movie("Untitled", 0.0, 0, 0, Genre::ActionMovie, 0, Date(), Hour()), actionIntensity(0) {}
 
 
-ActionMovie::ActionMovie(const MyString& title, double rating, unsigned length,
-    unsigned year, unsigned room, const Date& date,
-    const Hour& startTime, unsigned intensity)
-    : Movie(title, rating, length, year, Genre::ActionMovie, room, date, startTime),
-    actionIntensity(intensity)
+
+ActionMovie::ActionMovie() : Movie(), actionIntensity(0) {}
+
+ActionMovie::ActionMovie(const MyString& title, double rating, unsigned length, unsigned year, Room room, const Date& date, const Hour& startTime, MyVector<Rating> ratings, unsigned intensity)
+: Movie(title, length, year, Genre::ActionMovie, room, date, startTime, ratings)
 {
-    if (intensity > MAX_ACTIONMOVIE_INTENSITY) {
-        throw std::invalid_argument("Action intensity must be 0-20");
-    }
+	setIntensity(intensity);
 }
+
+
 
 unsigned ActionMovie::getIntensity() const {
     return actionIntensity;
