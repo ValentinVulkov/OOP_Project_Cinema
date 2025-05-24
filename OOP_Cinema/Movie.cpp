@@ -1,11 +1,15 @@
 #include "Movie.h"
 
-Movie::Movie() : title(), length(0), year(0), genre(Genre::ActionMovie), room(), date(), startTime(), ratings(MyVector<Rating>())
+unsigned Movie::nextId(1);
+
+Movie::Movie() : Id(nextId++),title(), length(0), year(0), genre(Genre::ActionMovie), room(), date(), startTime(), ratings(MyVector<Rating>()), averageRating(0)
 {
 }
 
+
 Movie::Movie(const MyString& title, unsigned length, unsigned year, Genre genre, Room room, const Date& date, const Hour& startTime, MyVector<Rating> ratings)
 {
+	Id = nextId++;
 	setTitle(title);
 	setLength(length);
 	setYear(year);
@@ -14,6 +18,26 @@ Movie::Movie(const MyString& title, unsigned length, unsigned year, Genre genre,
 	setDate(date);
 	setStartTime(startTime);
 	setRatings(ratings);
+}
+
+Movie::Movie(unsigned Id, const MyString& title, unsigned length, unsigned year, Genre genre, Room room, const Date& date, const Hour& startTime)
+{
+	this->Id = Id;
+	nextId++;
+	setTitle(title);
+	setLength(length);
+	setYear(year);
+	setGenre(genre);
+	setRoom(room);
+	setDate(date);
+	setStartTime(startTime);
+	setRatings(ratings);
+
+}
+
+unsigned Movie::getId() const
+{
+	return Id;
 }
 
 const MyString& Movie::getTitle() const
@@ -123,7 +147,7 @@ void Movie::setRatings(const MyVector<Rating> ratings)
 double Movie::calculateAverageRating(const MyVector<Rating>& ratings) const
 {
 	double result = 0.0;
-	unsigned ratingsCount = ratings.getSize();
+	size_t ratingsCount = ratings.getSize();
 	if (ratingsCount > 0) {
 		double sum = 0;
 		for (unsigned i = 0; i < ratingsCount; i++) {
@@ -168,4 +192,55 @@ void Movie::printInfo() const
 	std::cout << ", Start Time: " << startTime << std::endl;
 	std::cout << ", End Time: " << endTime << std::endl;
 	std::cout << "Average Rating: " << averageRating << std::endl;
+}
+
+void Movie::writeToFile(std::ofstream& out) const {
+	// 1. Write primitive members
+	out.write(reinterpret_cast<const char*>(&Id), sizeof(Id));
+	out.write(reinterpret_cast<const char*>(&length), sizeof(length));
+	out.write(reinterpret_cast<const char*>(&year), sizeof(year));
+	out.write(reinterpret_cast<const char*>(&genre), sizeof(genre));
+
+	// 2. Write MyString members
+	title.writeToFile(out);
+
+	// 3. Write complex objects
+	room.writeToFile(out);    // Assuming Room has serialization
+	date.writeToFile(out);    // Assuming Date has serialization
+	startTime.writeToFile(out); // Assuming Hour has serialization
+	endTime.writeToFile(out);
+
+	// 4. Write ratings
+	size_t ratingsCount = ratings.getSize();
+	out.write(reinterpret_cast<const char*>(&ratingsCount), sizeof(ratingsCount));
+	for (size_t i = 0; i < ratingsCount; i++) {
+		ratings[i].writeToFile(out);
+	}
+}
+
+void Movie::readFromFile(std::ifstream& in) {
+	// 1. Read primitive members
+	in.read(reinterpret_cast<char*>(&Id), sizeof(Id));
+	in.read(reinterpret_cast<char*>(&length), sizeof(length));
+	in.read(reinterpret_cast<char*>(&year), sizeof(year));
+	in.read(reinterpret_cast<char*>(&genre), sizeof(genre));
+
+	// 2. Read MyString members
+	title.readFromFile(in);
+
+	// 3. Read complex objects
+	room.readFromFile(in);
+	date.readFromFile(in);
+	startTime.readFromFile(in);
+	endTime.readFromFile(in);
+
+	// 4. Read ratings
+	size_t ratingsCount;
+	in.read(reinterpret_cast<char*>(&ratingsCount), sizeof(ratingsCount));
+	ratings.clear();
+	for (size_t i = 0; i < ratingsCount; i++) {
+		Rating rating;
+		rating.readFromFile(in);
+		ratings.push_back(rating);
+	}
 }

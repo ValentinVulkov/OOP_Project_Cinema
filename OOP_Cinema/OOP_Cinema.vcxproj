@@ -128,37 +128,49 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActionMovie.cpp" />
+    <ClCompile Include="CinemaSystem.cpp" />
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="DocumentaryMovie.cpp" />
     <ClCompile Include="DramaMovie.cpp" />
-    <ClCompile Include="Movie.cpp" />
+    <ClCompile Include="HelpFunc.cpp" />
     <ClCompile Include="Hour.cpp" />
+    <ClCompile Include="Movie.cpp" />
     <ClCompile Include="Login.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyString.cpp" />
     <ClCompile Include="Rating.cpp" />
+    <ClCompile Include="readFromFile.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomManager.cpp" />
     <ClCompile Include="Seat.cpp" />
     <ClCompile Include="Ticket.cpp" />
     <ClCompile Include="User.cpp" />
+    <ClCompile Include="UserCommands.cpp" />
+    <ClCompile Include="UserFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionMovie.h" />
+    <ClInclude Include="CinemaSystem.h" />
+    <ClInclude Include="Command.h" />
     <ClInclude Include="Date.h" />
     <ClInclude Include="DocumentaryMovie.h" />
     <ClInclude Include="DramaMovie.h" />
+    <ClInclude Include="HelpFunc.h" />
     <ClInclude Include="Movie.h" />
     <ClInclude Include="Hour.h" />
     <ClInclude Include="Login.h" />
     <ClInclude Include="MyString.h" />
     <ClInclude Include="MyVector.hpp" />
     <ClInclude Include="Rating.h" />
+    <ClInclude Include="readFromFile.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomManager.h" />
     <ClInclude Include="Seat.h" />
     <ClInclude Include="Ticket.h" />
     <ClInclude Include="User.h" />
+    <ClInclude Include="UserCommands.h" />
+    <ClInclude Include="UserFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Accounts.txt" />

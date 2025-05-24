@@ -1,6 +1,6 @@
 #include "User.h"
 
-User::User() : username(""), password(""), tickets(0), watchedMovies(0), balance(0){}
+User::User() : username(""), password(""), isAdmin(false), tickets(0), watchedMovies(0), balance(0){}
 
 User::User(const MyString& username, const MyString& password, bool isAdmin, MyVector<Ticket> tickets, MyVector<Movie> watchedMovies, unsigned balance)
 {
@@ -86,4 +86,28 @@ void User::addTicket(const Ticket& ticket)
 void User::addWatchedMovie(const Movie& movie)
 {
 	//...
+}
+
+void User::writeToFile(std::ofstream& ofs) const
+{
+	username.writeToFile(ofs);
+	password.writeToFile(ofs);
+
+	// Write other primitive types
+	ofs.write(reinterpret_cast<const char*>(&isAdmin), sizeof(isAdmin));
+	ofs.write(reinterpret_cast<const char*>(&balance), sizeof(balance));
+
+	// Write tickets
+	size_t ticketCount = tickets.getSize();
+	ofs.write(reinterpret_cast<const char*>(&ticketCount), sizeof(ticketCount));
+	for (size_t i = 0; i < ticketCount; i++) {
+		tickets[i].writeToFile(ofs);
+	}
+
+	// Write watched movies
+	size_t movieCount = watchedMovies.getSize();
+	ofs.write(reinterpret_cast<const char*>(&movieCount), sizeof(movieCount));
+	for (size_t i = 0; i < movieCount; i++) {
+		watchedMovies[i].writeToFile(ofs);
+	}
 }

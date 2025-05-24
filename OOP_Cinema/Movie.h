@@ -13,6 +13,8 @@ enum class Genre {
 
 class Movie {
 private:
+    unsigned Id;
+	static unsigned nextId;
     MyString title;
     unsigned length; // in minutes
     unsigned year;
@@ -31,7 +33,12 @@ public:
         unsigned year, Genre genre, Room room,
         const Date& date, const Hour& startTime, MyVector<Rating> ratings);
 
+	explicit Movie(unsigned Id, const MyString& title, unsigned length,
+		unsigned year, Genre genre, Room room,
+		const Date& date, const Hour& startTime);  // second constructor if manually setting Id's is manditory
+
     // Getters
+	unsigned getId() const;
     const MyString& getTitle() const;
     unsigned getLength() const;
     unsigned getYear() const;
@@ -59,4 +66,7 @@ public:
 
     virtual void printInfo() const ;
 	virtual ~Movie() = default;
+
+    void writeToFile(std::ofstream& out) const;
+    void readFromFile(std::ifstream& in);
 };

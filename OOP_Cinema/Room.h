@@ -10,11 +10,11 @@ private:
     unsigned ID;
     unsigned rows;
     unsigned cols;
-	MyVector<MyVector<Seat>> seats;
+    MyVector<MyVector<Seat>> seats;
 
 public:
     Room();
-	explicit Room(unsigned rows, unsigned cols);
+    explicit Room(unsigned rows, unsigned cols);
 
     unsigned getID() const;
     unsigned getRows() const;
@@ -26,6 +26,8 @@ public:
 
     Seat& getSeat(unsigned row, unsigned col);
     const Seat& getSeat(unsigned row, unsigned col) const;
-	~Room();
+    ~Room();
+
+    void writeToFile(std::ofstream& out) const;
+    void readFromFile(std::ifstream& in);
 };
-   

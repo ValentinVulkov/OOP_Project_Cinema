@@ -9,17 +9,23 @@ class Seat;
 class Ticket {
     Movie movie;
     Seat seat;
+	double price;
 
 public:
 	Ticket();
-	Ticket(const Movie& movie, const Seat& seat);
+	Ticket(const Movie& movie, const Seat& seat, double price);
 
 	const Movie& getMovie() const;
 	const Seat& getSeat() const;
+	double getPrice() const;
 
 	void setMovie(const Movie& movie);
 	void setSeat(const Seat& seat);
+	void setPrice(double price);
 
 	void printTicketInfo() const;
 	~Ticket() = default;
+
+	void writeToFile(std::ofstream& out) const;
+	void readFromFile(std::ifstream& in);
 };

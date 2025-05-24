@@ -17,5 +17,8 @@ public:
 
 	void printRatingInfo() const;
 	~Rating() = default;
+
+	void writeToFile(std::ofstream& out) const;
+	void readFromFile(std::ifstream& in);
 };
 

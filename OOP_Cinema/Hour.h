@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <fstream>
 
 class Hour {
 private:
@@ -28,6 +29,9 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Hour& h);
     friend std::istream& operator>>(std::istream& is, Hour& h);
 	~Hour() = default;
+
+    void writeToFile(std::ofstream& out) const;
+    void readFromFile(std::ifstream& in);
 };
 
 #endif // HOUR_H

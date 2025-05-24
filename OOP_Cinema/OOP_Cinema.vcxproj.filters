@@ -22,6 +22,9 @@
     <Filter Include="Components">
       <UniqueIdentifier>{7fec23dc-114c-4a05-bd89-6a7ee307b4d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{d89a104a-c72e-4ef8-8643-a1b50e28df88}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Login.cpp">
@@ -34,9 +37,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MyString.cpp">
-      <Filter>HelperClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Hour.cpp">
       <Filter>HelperClasses</Filter>
     </ClCompile>
     <ClCompile Include="Date.cpp">
@@ -68,6 +68,27 @@
     </ClCompile>
     <ClCompile Include="Ticket.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="CinemaSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="UserCommands.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="UserFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HelpFunc.cpp">
+      <Filter>HelperClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="readFromFile.cpp">
+      <Filter>HelperClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Hour.cpp">
+      <Filter>HelperClasses</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +136,24 @@
     </ClInclude>
     <ClInclude Include="Ticket.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CinemaSystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="UserCommands.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="UserFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HelpFunc.h">
+      <Filter>HelperClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="readFromFile.h">
+      <Filter>HelperClasses</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

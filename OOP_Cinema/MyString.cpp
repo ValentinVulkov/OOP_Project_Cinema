@@ -232,6 +232,27 @@ MyString MyString::substr(unsigned begin, unsigned howMany)
 	return res;
 }
 
+void MyString::writeToFile(std::ofstream& out) const {
+	size_t strSize = size;
+	out.write(reinterpret_cast<const char*>(&strSize), sizeof(strSize));
+
+	out.write(data, size);
+}
+
+void MyString::readFromFile(std::ifstream& in)
+{
+	size_t strSize;
+	in.read(reinterpret_cast<char*>(&strSize), sizeof(strSize));
+
+	// Allocate memory and read string data
+	delete[] data;
+	data = new char[strSize + 1];
+	in.read(data, strSize);
+	data[strSize] = '\0';
+	size = strSize;
+	capacity = strSize + 1;
+}
+
 
 bool operator==(const MyString& lhs, const MyString& rhs)
 {

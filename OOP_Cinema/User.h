@@ -30,9 +30,12 @@ public:
 	void setTickets(const MyVector<Ticket>& tickets);
 	void setWatchedMovies(const MyVector<Movie>& watchedMovies);
 	void setAdmin(bool isAdmin);
+	~User() = default;
+
 
 	void addTicket(const Ticket& ticket);
 	void addWatchedMovie(const Movie& movie);
-	~User() = default;
+	
+	void writeToFile(std::ofstream& ofs) const;
 };
 

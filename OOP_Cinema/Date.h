@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <fstream>
 
 class Date {
 private:
@@ -31,6 +32,9 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Date& date);
     friend std::istream& operator>>(std::istream& is, Date& date);
 	~Date() = default;
+
+    void writeToFile(std::ofstream& out) const;  // Const correct
+    void readFromFile(std::ifstream& in);
 };
 
 #endif // DATE_H

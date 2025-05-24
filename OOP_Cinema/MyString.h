@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 
 class MyString
 {
@@ -35,6 +36,8 @@ public:
 	friend std::istream& operator>>(std::istream& is, MyString& str);
 
 	MyString substr(unsigned begin, unsigned howMany);
+	void writeToFile(std::ofstream& out) const;
+	void readFromFile(std::ifstream& in);
 };
 
 bool operator==(const MyString& lhs, const MyString& rhs);
