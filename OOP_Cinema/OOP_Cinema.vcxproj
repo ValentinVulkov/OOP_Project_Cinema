@@ -156,7 +156,6 @@
     <ClInclude Include="Rating.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomManager.h" />
-    <ClInclude Include="RowAndCol.h" />
     <ClInclude Include="Seat.h" />
     <ClInclude Include="Ticket.h" />
     <ClInclude Include="User.h" />
