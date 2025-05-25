@@ -194,53 +194,46 @@ void Movie::printInfo() const
 	std::cout << "Average Rating: " << averageRating << std::endl;
 }
 
-void Movie::writeToFile(std::ofstream& out) const {
-	// 1. Write primitive members
-	out.write(reinterpret_cast<const char*>(&Id), sizeof(Id));
-	out.write(reinterpret_cast<const char*>(&length), sizeof(length));
-	out.write(reinterpret_cast<const char*>(&year), sizeof(year));
-	out.write(reinterpret_cast<const char*>(&genre), sizeof(genre));
+void Movie::writeToTextFile(std::ofstream& out) const {
+	out << Id << "\n";
+	writeStringToTextFile(out, title);
+	out << length << "\n";
+	out << year << "\n";
+	out << static_cast<int>(genre) << "\n";
+	room.writeToTextFile(out);
+	date.writeToTextFile(out);
+	startTime.writeToTextFile(out);
 
-	// 2. Write MyString members
-	title.writeToFile(out);
-
-	// 3. Write complex objects
-	room.writeToFile(out);    // Assuming Room has serialization
-	date.writeToFile(out);    // Assuming Date has serialization
-	startTime.writeToFile(out); // Assuming Hour has serialization
-	endTime.writeToFile(out);
-
-	// 4. Write ratings
-	size_t ratingsCount = ratings.getSize();
-	out.write(reinterpret_cast<const char*>(&ratingsCount), sizeof(ratingsCount));
-	for (size_t i = 0; i < ratingsCount; i++) {
-		ratings[i].writeToFile(out);
+	// Write ratings
+	out << ratings.getSize() << "\n";
+	for (size_t i = 0; i < ratings.getSize(); i++) {
+		ratings[i].writeToTextFile(out);
 	}
 }
 
-void Movie::readFromFile(std::ifstream& in) {
-	// 1. Read primitive members
-	in.read(reinterpret_cast<char*>(&Id), sizeof(Id));
-	in.read(reinterpret_cast<char*>(&length), sizeof(length));
-	in.read(reinterpret_cast<char*>(&year), sizeof(year));
-	in.read(reinterpret_cast<char*>(&genre), sizeof(genre));
+void Movie::readFromTextFile(std::ifstream& in) {
+	in >> Id;
+	in.ignore();
+	title = readStringFromTextFile(in);
+	in >> length >> year;
 
-	// 2. Read MyString members
-	title.readFromFile(in);
+	int genreInt;
+	in >> genreInt;
+	genre = static_cast<Genre>(genreInt);
+	in.ignore();
 
-	// 3. Read complex objects
-	room.readFromFile(in);
-	date.readFromFile(in);
-	startTime.readFromFile(in);
-	endTime.readFromFile(in);
+	room.readFromTextFile(in);
+	date.readFromTextFile(in);
+	startTime.readFromTextFile(in);
 
-	// 4. Read ratings
 	size_t ratingsCount;
-	in.read(reinterpret_cast<char*>(&ratingsCount), sizeof(ratingsCount));
+	in >> ratingsCount;
+	in.ignore();
+
 	ratings.clear();
 	for (size_t i = 0; i < ratingsCount; i++) {
 		Rating rating;
-		rating.readFromFile(in);
+		rating.readFromTextFile(in);
 		ratings.push_back(rating);
 	}
 }

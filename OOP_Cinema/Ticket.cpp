@@ -56,12 +56,12 @@ void Ticket::printTicketInfo() const {
 
 void Ticket::writeToFile(std::ofstream& out) const {
 	out.write(reinterpret_cast<const char*>(&movieId), sizeof(movieId));
-	seat.writeToFile(out);
+	seat.writeToTextFile(out);
 	out.write(reinterpret_cast<const char*>(&price), sizeof(price));
 }
 
 void Ticket::readFromFile(std::ifstream& in) {
 	in.read(reinterpret_cast<char*>(&movieId), sizeof(movieId));
-	seat.readFromFile(in);
+	seat.readFromTextFile(in);
 	in.read(reinterpret_cast<char*>(&price), sizeof(price));
 }

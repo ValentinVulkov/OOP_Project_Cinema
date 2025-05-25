@@ -4,6 +4,7 @@
 #include "Hour.h"
 #include "Rating.h"
 #include "Room.h"
+#include "HelpFunc.h"
 
 enum class Genre {
     ActionMovie,
@@ -69,6 +70,6 @@ public:
 
     virtual double calculatePrice() const = 0;
 
-    void writeToFile(std::ofstream& out) const;
-    void readFromFile(std::ifstream& in);
+    virtual void writeToTextFile(std::ofstream& out) const;
+    virtual void readFromTextFile(std::ifstream& in);
 };

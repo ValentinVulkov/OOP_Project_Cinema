@@ -61,40 +61,14 @@ std::istream& operator>>(std::istream& is, Hour& h) {
     return is;
 }
 
-void Hour::writeToFile(std::ofstream& out) const {
-    // Write validation marker
-    const char marker = 'H';
-    out.write(&marker, 1);
 
-    // Write data
-    out.write(reinterpret_cast<const char*>(&hour), sizeof(hour));
-    out.write(reinterpret_cast<const char*>(&minute), sizeof(minute));
 
-    // Write end marker
-    const char endMarker = 'h';
-    out.write(&endMarker, 1);
+void Hour::writeToTextFile(std::ofstream& out) const {
+    out << hour << " " << minute << "\n";  // Space-separated values
 }
 
-void Hour::readFromFile(std::ifstream& in) {
-    // Check start marker
-    char marker;
-    in.read(&marker, 1);
-    if (marker != 'H') {
-        throw std::runtime_error("Invalid Hour data format");
-    }
-
-    // Read data
-    in.read(reinterpret_cast<char*>(&hour), sizeof(hour));
-    in.read(reinterpret_cast<char*>(&minute), sizeof(minute));
-
-    // Validate values
-    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-        throw std::runtime_error("Invalid time values in file");
-    }
-
-    // Check end marker
-    in.read(&marker, 1);
-    if (marker != 'h') {
-        throw std::runtime_error("Corrupted Hour data");
-    }
+void Hour::readFromTextFile(std::ifstream& in) {
+    in >> hour >> minute;
+    in.ignore();  // Skip the newline after reading
+    validate();   // Verify the time is valid
 }

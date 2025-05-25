@@ -24,7 +24,7 @@ public:
 	bool getReserved() const;
 	~Seat() = default;
 
-	void writeToFile(std::ofstream& out) const;
-	void readFromFile(std::ifstream& in);
+	void writeToTextFile(std::ofstream& out) const;
+	void readFromTextFile(std::ifstream& in);
 
 };

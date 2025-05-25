@@ -1,29 +1,13 @@
 #include "HelpFunc.h"
 
-void writeStringToFile(std::ofstream& ofs, const MyString& str)
-{
-	int len = str.getSize();
-	ofs.write((const char*)&len, sizeof(len));
-	ofs.write((const char*)str.c_str(), str.getSize() * sizeof(char));
+void writeStringToTextFile(std::ofstream& ofs, const MyString& str) {
+	ofs << str.c_str() << "\n"; // Write string followed by newline
 }
 
-MyString readStringFromFile(std::ifstream& ifs)
-{
-	int len = 0;
-
-	ifs.read((char*)&len, sizeof(len));
-
-	char* buff = new char[len + 1] {};
-
-	ifs.read((char*)buff, sizeof(char) * len);
-
-	buff[len] = '\0';
-
-	MyString toReturn = buff;
-
-	delete[] buff;
-
-	return toReturn;
+MyString readStringFromTextFile(std::ifstream& ifs) {
+	char buffer[256];
+	ifs.getline(buffer, 256);
+	return MyString(buffer);
 }
 
 int myStringToInt(const MyString& str) {

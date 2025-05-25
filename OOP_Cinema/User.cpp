@@ -85,8 +85,8 @@ void User::writeToFile(std::ofstream& out) const {
     }
 
     // Write username and password
-    writeStringToFile(out, username);
-    writeStringToFile(out, password);
+    writeStringToTextFile(out, username);
+    writeStringToTextFile(out, password);
 
     // Write admin status and balance
     out.write(reinterpret_cast<const char*>(&isAdmin), sizeof(isAdmin));
@@ -113,8 +113,8 @@ void User::readFromFile(std::ifstream& in) {
     }
 
     // Read username and password
-    username = readStringFromFile(in);
-    password = readStringFromFile(in);
+    username = readStringFromTextFile(in);
+    password = readStringFromTextFile(in);
 
     // Read admin status and balance
     in.read(reinterpret_cast<char*>(&isAdmin), sizeof(isAdmin));

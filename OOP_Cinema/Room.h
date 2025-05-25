@@ -1,13 +1,14 @@
 #pragma once
 #include "MyVector.hpp"
 #include "Seat.h"
-#include "RoomManager.h"
+#include <iostream>
 
 
  
 class Room {
 private:
-    unsigned ID;
+    unsigned Id;
+	static unsigned nextId;
     unsigned rows;
     unsigned cols;
     MyVector<MyVector<Seat>> seats;
@@ -28,6 +29,10 @@ public:
     const Seat& getSeat(unsigned row, unsigned col) const;
     ~Room();
 
-    void writeToFile(std::ofstream& out) const;
-    void readFromFile(std::ifstream& in);
+    void writeToTextFile(std::ofstream& out) const;
+    void readFromTextFile(std::ifstream& in);
+
+    static void setNextIdIfLarger(unsigned testId);
+
+    void printInfo() const;
 };

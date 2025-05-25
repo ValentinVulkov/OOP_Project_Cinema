@@ -32,7 +32,7 @@ const User* CinemaSystem::findUserByUsername(const MyString& username) const {
 
 void CinemaSystem::saveUsers() const
 {
-    std::ofstream out("Users.dat", std::ios::binary);
+    std::ofstream out("Users.txt");
     if (!out.is_open()) {
         throw std::runtime_error("Could not open users file for writing");
     }
@@ -49,20 +49,19 @@ void CinemaSystem::saveUsers() const
     out.close();
 }
 
-void CinemaSystem::saveRooms() const
-{
-    std::ofstream out("Rooms.dat", std::ios::binary);
+void CinemaSystem::saveRooms() const {
+    std::ofstream out("Rooms.txt");
     if (!out.is_open()) {
         throw std::runtime_error("Could not open rooms file for writing");
     }
 
-    // Write number of rooms
-    size_t roomCount = rooms.getSize();
-    out.write(reinterpret_cast<const char*>(&roomCount), sizeof(roomCount));
+    // Write total number of rooms
+    out << rooms.getSize() << '\n';
 
-    // Write each room
-    for (size_t i = 0; i < roomCount; i++) {
-        rooms[i].writeToFile(out);
+	unsigned roomCount = rooms.getSize();
+    // Write each room's data
+    for (unsigned i = 0; i < roomCount;i++) {
+        rooms[i].writeToTextFile(out);
     }
 
     out.close();
@@ -81,7 +80,7 @@ void CinemaSystem::saveMovies() const
 
 	// Write each movie
 	for (size_t i = 0; i < movieCount; i++) {
-		movies[i]->writeToFile(out);
+		movies[i]->writeToTextFile(out);
 	}
 
 	out.close();
@@ -120,24 +119,21 @@ void CinemaSystem::loadUsers()
 
 void CinemaSystem::loadRooms()
 {
-    std::ifstream in("Rooms.dat", std::ios::binary);
+    std::ifstream in("Rooms.txt");
     if (!in.is_open()) {
         throw std::runtime_error("Could not open rooms file for reading");
     }
 
-    // Clear existing rooms
     rooms.clear();
-
-    // Read number of rooms
     size_t roomCount;
-    in.read(reinterpret_cast<char*>(&roomCount), sizeof(roomCount));
+    in >> roomCount;
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     for (size_t i = 0; i < roomCount; i++) {
         Room room;
-        room.readFromFile(in);
+        room.readFromTextFile(in);
         rooms.push_back(room);
     }
-
     in.close();
 }
 
@@ -180,7 +176,7 @@ void CinemaSystem::loadMovies()
         }
 
         // Read the rest of the movie data
-        movie->readFromFile(in);
+        movie->readFromTextFile(in);
         movies.push_back(movie);
     }
 
@@ -266,10 +262,10 @@ bool CinemaSystem::removeRoomById(unsigned id)
 
 CinemaSystem::CinemaSystem()
 {
-	loadUsers();
-	loadRooms();
-	loadMovies();
-	currentUser = nullptr; // Initialize current user to nullptr
+	//loadUsers();
+	//loadRooms();
+	//loadMovies();
+	//currentUser = nullptr; // Initialize current user to nullptr
 }
 
 CinemaSystem::~CinemaSystem()

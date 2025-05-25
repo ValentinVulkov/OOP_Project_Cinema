@@ -33,8 +33,8 @@ public:
     friend std::istream& operator>>(std::istream& is, Date& date);
 	~Date() = default;
 
-    void writeToFile(std::ofstream& out) const;  // Const correct
-    void readFromFile(std::ifstream& in);
+    void writeToTextFile(std::ofstream& out) const;
+    void readFromTextFile(std::ifstream& in);
 };
 
 #endif // DATE_H

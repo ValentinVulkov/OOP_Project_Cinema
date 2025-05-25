@@ -3,7 +3,7 @@
 #include "MyString.h"
 #include <fstream>
 
-void writeStringToFile(std::ofstream& ofs, const MyString& str);
-MyString readStringFromFile(std::ifstream& ifs);
+void writeStringToTextFile(std::ofstream& ofs, const MyString& str);
+MyString readStringFromTextFile(std::ifstream& ifs);
 int myStringToInt(const MyString& str);
 

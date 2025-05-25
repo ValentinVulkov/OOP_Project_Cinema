@@ -1,34 +1,33 @@
 #include "Room.h"
 
-Room::Room() : ID(RoomManager::assignID()), rows(0), cols(0) {}
+unsigned Room::nextId = 1;
+
+Room::Room() : Id(nextId++), rows(0), cols(0) {}
 
 Room::Room(unsigned rows, unsigned cols)
-    : ID(RoomManager::assignID()), rows(rows), cols(cols)
+    : Id(nextId++), rows(rows), cols(cols)
 {
-    // Initialize each row
-    for (unsigned i = 0; i < rows; ++i) {
-        MyVector<Seat> currentRow;  // Create a new row
+    seats = MyVector<MyVector<Seat>>(rows, MyVector<Seat>(cols));
 
-        // Fill the row with seats
-        for (unsigned j = 0; j < cols; ++j) {
-            currentRow.push_back(Seat());  // Add each seat
-        }
 
-        seats.push_back(currentRow);  // Add the completed row
-    }
+    //for (unsigned i = 0; i < rows; ++i) {
+    //    MyVector<Seat> currentRow;  
+
+    //    
+    //    for (unsigned j = 0; j < cols; ++j) {
+    //        currentRow.push_back(Seat()); 
+    //    }
+
+    //    seats.push_back(currentRow); 
+    //}
 }
 
-// Destructor
-Room::~Room() {
-    if (ID != 0) {  // Only release valid IDs
-        RoomManager::releaseID(ID);
-    }
-}
 
-// Getters
+Room::~Room() = default;
+
 unsigned Room::getID() const
 {
-	return ID;
+	return Id;
 }
 unsigned Room::getRows() const
 {
@@ -99,54 +98,50 @@ const Seat& Room::getSeat(unsigned row, unsigned col) const {
     return seats[row][col];
 }
 
-void Room::writeToFile(std::ofstream& out) const {
-    if (!out.is_open()) {
-        throw std::runtime_error("Failed to open Rooms.dat for writing");
-    }
-    if (out.fail()) {
-        throw std::runtime_error("Stream is in a failed state before writing");
-    }
+void Room::writeToTextFile(std::ofstream& out) const {
+    out << Id << ' ' << rows << ' ' << cols << '\n';
 
-    const char marker = 'R';
-    out.write(&marker, 1);
-    out.write(reinterpret_cast<const char*>(&ID), sizeof(ID));
-    out.write(reinterpret_cast<const char*>(&rows), sizeof(rows));
-    out.write(reinterpret_cast<const char*>(&cols), sizeof(cols));
-
-    // Write seats grid
+    // Write seat matrix
     for (unsigned i = 0; i < rows; ++i) {
         for (unsigned j = 0; j < cols; ++j) {
-            seats[i][j].writeToFile(out);
+            out << (seats[i][j].getReserved() ? '1' : '0');
+            if (j < cols - 1) out << ' ';
         }
+        out << '\n';
     }
 }
 
-void Room::readFromFile(std::ifstream& in) {
-    if (!in.good()) {
-        if (!in.is_open()) {
-            throw std::runtime_error("Stream not open. Check file path/permissions.");
-        }
-        if (in.fail()) {
-            throw std::runtime_error("Stream failed (e.g., disk full or bad write).");
-        }
-        if (in.bad()) {
-            throw std::runtime_error("Critical stream error (e.g., no permission).");
-        }
-    }
+void Room::readFromTextFile(std::ifstream& in) {
+    // Read basic room info
+    in >> Id;
+    setNextIdIfLarger(Id);
+    in >> rows >> cols;
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear to end of line
 
-    char marker;
-    in.read(&marker, 1);
-    if (marker != 'R') throw std::runtime_error("Invalid Room data marker");
-
-    in.read(reinterpret_cast<char*>(&ID), sizeof(ID));
-    in.read(reinterpret_cast<char*>(&rows), sizeof(rows));
-    in.read(reinterpret_cast<char*>(&cols), sizeof(cols));
-
-    // Rebuild seats grid
+    // Initialize seats vector
     seats = MyVector<MyVector<Seat>>(rows, MyVector<Seat>(cols));
+
+    // Read seat statuses
     for (unsigned i = 0; i < rows; ++i) {
         for (unsigned j = 0; j < cols; ++j) {
-            seats[i][j].readFromFile(in);
+            int status;
+            in >> status;
+            seats[i][j].setReserved(status == 1);
         }
+        in.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear to end of line after each row
     }
+}
+
+void Room::setNextIdIfLarger(unsigned testId) {
+    if (testId >= nextId) {
+        nextId = testId + 1;
+    }
+}
+
+void Room::printInfo() const
+{
+	std::cout << "Room Information:" << std::endl;
+	std::cout << "Rows: " << rows << std::endl;
+	std::cout << "Columns: " << cols << std::endl;
+	std::cout << "Room ID: " << Id << std::endl;
 }

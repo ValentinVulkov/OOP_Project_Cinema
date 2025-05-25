@@ -18,7 +18,9 @@ public:
 	void printRatingInfo() const;
 	~Rating() = default;
 
-	void writeToFile(std::ofstream& out) const;
-	void readFromFile(std::ifstream& in);
+	void writeToTextFile(std::ofstream& out) const;
+	void readFromTextFile(std::ifstream& in);
+
+	static bool isValidRating(unsigned rating);
 };
 
