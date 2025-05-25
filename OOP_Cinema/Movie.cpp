@@ -2,25 +2,25 @@
 
 unsigned Movie::nextId(1);
 
-Movie::Movie() : Id(nextId++),title(), length(0), year(0), genre(Genre::ActionMovie), room(), date(), startTime(), ratings(MyVector<Rating>()), averageRating(0)
+Movie::Movie() : Id(nextId++),title(), length(0), year(0), genre(Genre::ActionMovie), roomId(0), date(), startTime(), ratings(MyVector<Rating>()), averageRating(0)
 {
 }
 
 
-Movie::Movie(const MyString& title, unsigned length, unsigned year, Genre genre, Room room, const Date& date, const Hour& startTime, MyVector<Rating> ratings)
+Movie::Movie(const MyString& title, unsigned length, unsigned year, Genre genre, unsigned roomId, const Date& date, const Hour& startTime, MyVector<Rating> ratings)
 {
 	Id = nextId++;
 	setTitle(title);
 	setLength(length);
 	setYear(year);
 	setGenre(genre);
-	setRoom(room);
+	setRoomId(roomId);
 	setDate(date);
 	setStartTime(startTime);
 	setRatings(ratings);
 }
 
-Movie::Movie(unsigned Id, const MyString& title, unsigned length, unsigned year, Genre genre, Room room, const Date& date, const Hour& startTime)
+Movie::Movie(unsigned Id, const MyString& title, unsigned length, unsigned year, Genre genre, unsigned roomId, const Date& date, const Hour& startTime)
 {
 	this->Id = Id;
 	nextId++;
@@ -28,7 +28,7 @@ Movie::Movie(unsigned Id, const MyString& title, unsigned length, unsigned year,
 	setLength(length);
 	setYear(year);
 	setGenre(genre);
-	setRoom(room);
+	setRoomId(roomId);
 	setDate(date);
 	setStartTime(startTime);
 	setRatings(ratings);
@@ -60,9 +60,9 @@ Genre Movie::getGenre() const
 	return genre;
 }
 
-Room Movie::getRoom() const
+unsigned Movie::getRoomId() const
 {
-	return room;
+	return roomId;
 }
 
 const Date& Movie::getDate() const
@@ -121,9 +121,12 @@ void Movie::setGenre(Genre newGenre)
 	genre = newGenre;
 }
 
-void Movie::setRoom(Room newRoom)
+void Movie::setRoomId(unsigned roomId)
 {
-	room = newRoom;
+	if (roomId == 0) {
+		throw std::invalid_argument("Room ID must be greater than 0.");
+	}
+	this->roomId = roomId;
 }
 
 void Movie::setDate(const Date& newDate)
@@ -186,11 +189,11 @@ void Movie::printInfo() const
 		break;
 	}
 	std::cout << std::endl;
-	std::cout << "Room: " << room.getID() << std::endl;
+	std::cout << "RoomId: " << roomId << std::endl;
 	std::cout << "Date: " << date << std::endl;
 	
-	std::cout << ", Start Time: " << startTime << std::endl;
-	std::cout << ", End Time: " << endTime << std::endl;
+	std::cout << "Start Time: " << startTime << std::endl;
+	std::cout << "End Time: " << endTime << std::endl;
 	std::cout << "Average Rating: " << averageRating << std::endl;
 }
 
@@ -200,7 +203,7 @@ void Movie::writeToTextFile(std::ofstream& out) const {
 	out << length << "\n";
 	out << year << "\n";
 	out << static_cast<int>(genre) << "\n";
-	room.writeToTextFile(out);
+	out << roomId << "\n";
 	date.writeToTextFile(out);
 	startTime.writeToTextFile(out);
 
@@ -213,22 +216,24 @@ void Movie::writeToTextFile(std::ofstream& out) const {
 
 void Movie::readFromTextFile(std::ifstream& in) {
 	in >> Id;
-	in.ignore();
+	in.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Skip the rest of the line
 	title = readStringFromTextFile(in);
 	in >> length >> year;
+	in.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Skip the rest of the line
 
 	int genreInt;
 	in >> genreInt;
 	genre = static_cast<Genre>(genreInt);
-	in.ignore();
+	in.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Skip the rest of the line
 
-	room.readFromTextFile(in);
-	date.readFromTextFile(in);
+	in >> roomId;
+	//in.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Skip the rest of the line
+	date.readFromTextFile(in); // Now the stream is clean for reading the date
 	startTime.readFromTextFile(in);
 
 	size_t ratingsCount;
 	in >> ratingsCount;
-	in.ignore();
+	in.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Skip the rest of the line
 
 	ratings.clear();
 	for (size_t i = 0; i < ratingsCount; i++) {
@@ -236,4 +241,7 @@ void Movie::readFromTextFile(std::ifstream& in) {
 		rating.readFromTextFile(in);
 		ratings.push_back(rating);
 	}
+
+	endTime = startTime + length;
+	averageRating = calculateAverageRating(ratings);
 }

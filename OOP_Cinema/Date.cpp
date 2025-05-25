@@ -46,8 +46,8 @@ void Date::writeToTextFile(std::ofstream& out) const {
 
 void Date::readFromTextFile(std::ifstream& in) {
     in >> day >> month >> year;
-    in.ignore();  // Skip the newline after reading
-    validate();   // Verify the date is valid
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Skip the rest of the line
+
 }
 
 std::ostream& operator<<(std::ostream& os, const Date& date) {

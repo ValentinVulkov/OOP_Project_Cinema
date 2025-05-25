@@ -69,21 +69,22 @@ void CinemaSystem::saveRooms() const {
 
 void CinemaSystem::saveMovies() const
 {
-	std::ofstream out("Movies.dat", std::ios::binary);
-	if (!out.is_open()) {
-		throw std::runtime_error("Could not open file for writing");
-	}
+    std::ofstream out("Movies.txt");
+    if (!out.is_open()) {
+        throw std::runtime_error("Could not open movies file for writing");
+    }
 
-	// Write number of movies
-	size_t movieCount = movies.getSize();
-	out.write(reinterpret_cast<const char*>(&movieCount), sizeof(movieCount));
+    // Write number of movies
+    out << movies.getSize() << '\n';
 
-	// Write each movie
-	for (size_t i = 0; i < movieCount; i++) {
-		movies[i]->writeToTextFile(out);
-	}
+    for (size_t i = 0; i < movies.getSize(); i++) {
+        // Write movie type first
+        out << static_cast<int>(movies[i]->getGenre()) << '\n';
+        // Then write movie data
+        movies[i]->writeToTextFile(out);
+    }
 
-	out.close();
+    out.close();
 }
 
 void CinemaSystem::loadUsers()
@@ -139,26 +140,30 @@ void CinemaSystem::loadRooms()
 
 void CinemaSystem::loadMovies()
 {
-    std::ifstream in("Movies.dat", std::ios::binary);
+    std::ifstream in("Movies.txt");
     if (!in.is_open()) {
-        throw std::runtime_error("Could not open file for reading");
+        // File doesn't exist yet - not an error
+        movies.clear();
+        return;
     }
 
-    unsigned moviesCount = movies.getSize();
     // Clear existing movies
-    for (unsigned i = 0; i < moviesCount;i++) {
+    for (size_t i = 0; i < movies.getSize(); i++) {
         delete movies[i];
     }
     movies.clear();
 
     // Read number of movies
     size_t movieCount;
-    in.read(reinterpret_cast<char*>(&movieCount), sizeof(movieCount));
+    in >> movieCount;
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     for (size_t i = 0; i < movieCount; i++) {
-        // Read genre first to determine which type of movie to create
-        Genre genre;
-        in.read(reinterpret_cast<char*>(&genre), sizeof(genre));
+        // Read genre first
+        int genreInt;
+        in >> genreInt;
+        in.ignore(); // Skip newline
+        Genre genre = static_cast<Genre>(genreInt);
 
         Movie* movie = nullptr;
         switch (genre) {
@@ -174,10 +179,15 @@ void CinemaSystem::loadMovies()
         default:
             throw std::runtime_error("Unknown movie genre in file");
         }
-
-        // Read the rest of the movie data
-        movie->readFromTextFile(in);
-        movies.push_back(movie);
+        std::cout << genreInt;
+        try {
+            movie->readFromTextFile(in);
+            movies.push_back(movie);
+        }
+        catch (...) {
+            delete movie;
+            throw; // Re-throw the exception after cleanup
+        }
     }
 
     in.close();
@@ -231,30 +241,6 @@ User* CinemaSystem::getCurrentUser() const
 		return nullptr;
 	}
 	return currentUser;
-}
-
-bool CinemaSystem::removeRoomById(unsigned id)
-{
-    for (size_t i = 0; i < rooms.getSize(); i++) {
-        if (rooms[i].getID() == id) {
-            // First, check if this room is used by any movies
-            bool isUsed = false;
-            for (size_t j = 0; j < movies.getSize(); j++) {
-                if (movies[j]->getRoom().getID() == id) {
-                    isUsed = true;
-                    break;
-                }
-            }
-
-            if (isUsed) {
-                return false; // Room is in use, can't remove
-            }
-
-            rooms.erase(i);
-            return true;
-        }
-    }
-    return false; // Room not found
 }
 
 

@@ -164,5 +164,11 @@
     <Text Include="Rooms.txt">
       <Filter>Text files</Filter>
     </Text>
+    <Text Include="Movies.txt">
+      <Filter>Text files</Filter>
+    </Text>
+    <Text Include="DateTest.txt">
+      <Filter>Text files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

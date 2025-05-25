@@ -4,8 +4,8 @@ DocumentaryMovie::DocumentaryMovie() : Movie(), theme(), isBasedOnTrueEvents(fal
 {
 }
 
-DocumentaryMovie::DocumentaryMovie(const MyString& title, double rating, unsigned length, unsigned year, Room room, const Date& date, const Hour& startTime, MyVector<Rating> ratings, const MyString& theme, bool isBasedOnTrueEvents)
-	:Movie(title, length, year, Genre::DocumentaryMovie, room, date, startTime, ratings)
+DocumentaryMovie::DocumentaryMovie(const MyString& title, double rating, unsigned length, unsigned year, unsigned roomId, const Date& date, const Hour& startTime, MyVector<Rating> ratings, const MyString& theme, bool isBasedOnTrueEvents)
+	:Movie(title, length, year, Genre::DocumentaryMovie, roomId , date, startTime, ratings)
 {
 	setTheme(theme);
 	setIsBasedOnTrueEvents(isBasedOnTrueEvents);
@@ -52,4 +52,21 @@ void DocumentaryMovie::printInfo() const
 	std::cout << "Theme: " << theme << "\n"
 		<< "Based on True Events: " << (isBasedOnTrueEvents ? "Yes" : "No") << "\n"
 		<< "Ticket Price: " << calculatePrice() << " BGN\n";
+}
+
+void DocumentaryMovie::writeToTextFile(std::ofstream& out) const
+{
+	Movie::writeToTextFile(out); // Write base class data
+	out << theme << "\n";
+	out	<< (isBasedOnTrueEvents ? "1" : "0") << "\n"; // 1 for true, 0 for false
+}
+
+void DocumentaryMovie::readFromTextFile(std::ifstream& in)
+{
+	Movie::readFromTextFile(in); // Read base class data
+	in >> theme;
+	int trueEventsFlag;
+	in >> trueEventsFlag;
+	in.ignore(); // Skip newline
+	isBasedOnTrueEvents = (trueEventsFlag == 1);
 }

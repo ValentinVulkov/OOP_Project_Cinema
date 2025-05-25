@@ -11,7 +11,7 @@ public:
     DramaMovie();
 
     DramaMovie(const MyString& title, double rating, unsigned length,
-        unsigned year, Room room, const Date& date,
+        unsigned year, unsigned roomId, const Date& date,
         const Hour& startTime, bool comedyElements, MyVector<Rating> ratings);
 
     bool getHasComedyElements() const;
@@ -20,5 +20,8 @@ public:
     double calculatePrice() const;
     void printInfo() const override;
 	~DramaMovie() override = default;
+
+	void writeToTextFile(std::ofstream& out) const override;
+	void readFromTextFile(std::ifstream& in) override;
 };
 

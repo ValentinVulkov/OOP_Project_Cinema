@@ -6,8 +6,8 @@
 
 ActionMovie::ActionMovie() : Movie(), actionIntensity(0) {}
 
-ActionMovie::ActionMovie(const MyString& title, double rating, unsigned length, unsigned year, Room room, const Date& date, const Hour& startTime, MyVector<Rating> ratings, unsigned intensity)
-: Movie(title, length, year, Genre::ActionMovie, room, date, startTime, ratings)
+ActionMovie::ActionMovie(const MyString& title, double rating, unsigned length, unsigned year, unsigned roomId, const Date& date, const Hour& startTime, MyVector<Rating> ratings, unsigned intensity)
+: Movie(title, length, year, Genre::ActionMovie, roomId, date, startTime, ratings)
 {
 	setIntensity(intensity);
 }
@@ -35,4 +35,15 @@ void ActionMovie::printInfo() const {
     Movie::printInfo();
     std::cout << "Action Intensity: " << actionIntensity << "/20\n"
         << "Ticket Price: " << calculatePrice() << " BGN\n";
+}
+
+void ActionMovie::writeToTextFile(std::ofstream& out) const {
+    Movie::writeToTextFile(out); // Write base class data
+    out << actionIntensity << "\n";
+}
+
+void ActionMovie::readFromTextFile(std::ifstream& in) {
+    Movie::readFromTextFile(in); // Read base class data
+    in >> actionIntensity;
+    in.ignore(); // Skip newline
 }

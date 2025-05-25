@@ -20,7 +20,7 @@ private:
     unsigned length; // in minutes
     unsigned year;
     Genre genre;
-    Room room;          
+    unsigned roomId;          
     Date date;
     Hour startTime;
     Hour endTime;
@@ -31,11 +31,11 @@ public:
 
     Movie();
     Movie(const MyString& title, unsigned length,
-        unsigned year, Genre genre, Room room,
+        unsigned year, Genre genre, unsigned roomId,
         const Date& date, const Hour& startTime, MyVector<Rating> ratings);
 
 	explicit Movie(unsigned Id, const MyString& title, unsigned length,
-		unsigned year, Genre genre, Room room,
+		unsigned year, Genre genre, unsigned roomId,
 		const Date& date, const Hour& startTime);  // second constructor if manually setting Id's is manditory
 
     // Getters
@@ -44,7 +44,7 @@ public:
     unsigned getLength() const;
     unsigned getYear() const;
     Genre getGenre() const;
-    Room getRoom() const;
+    unsigned getRoomId() const;
     const Date& getDate() const;
     const Hour& getStartTime() const;
     const Hour& getEndTime() const;
@@ -56,7 +56,7 @@ public:
     void setLength(unsigned newLength);
     void setYear(unsigned newYear);
     void setGenre(Genre newGenre);
-    void setRoom(Room newRoom);
+    void setRoomId(unsigned Id);
     void setDate(const Date& newDate);
     void setStartTime(const Hour& newStartTime);
 	void setRatings(const MyVector<Rating> ratings);

@@ -12,7 +12,7 @@ class DocumentaryMovie : public Movie
 public:
 	DocumentaryMovie();
 	DocumentaryMovie(const MyString& title, double rating, unsigned length,
-		unsigned year, Room room, const Date& date,
+		unsigned year, unsigned roomId, const Date& date,
 		const Hour& startTime, MyVector<Rating> ratings, const MyString& theme, bool isBasedOnTrueEvents);
 
 	// Getters and Setters
@@ -25,5 +25,8 @@ public:
 	double calculatePrice() const;
 	void printInfo() const override;
 	~DocumentaryMovie() override = default;
+
+	void writeToTextFile(std::ofstream& out) const override;
+	void readFromTextFile(std::ifstream& in) override;
 };
 

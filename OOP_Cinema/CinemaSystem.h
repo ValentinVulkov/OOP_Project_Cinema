@@ -35,7 +35,7 @@ public:
 	void setCurrentUser(User* user);
 	User* getCurrentUser() const;
 
-	bool removeRoomById(unsigned id);
+	/*bool removeRoomById(unsigned id);*/
 
 	CinemaSystem();
 	~CinemaSystem();

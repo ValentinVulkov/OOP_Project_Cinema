@@ -45,11 +45,16 @@ void Rating::printRatingInfo() const
 
 void Rating::writeToTextFile(std::ofstream& out) const {
     if (!out.good()) throw std::runtime_error("Output stream error");
-    out << username.c_str() << "\n" << rating << "\n";
+    out <<   rating << "\n" << username.c_str() << "\n";
 }
 
 void Rating::readFromTextFile(std::ifstream& in) {
     if (!in.good()) throw std::runtime_error("Input stream error");
+
+    // Read rating line
+    in >> rating;
+    if (in.fail()) throw std::runtime_error("Failed to read rating value");
+    in.ignore(); // Consume newline
 
     // Read username line
     char buffer[256];
@@ -57,10 +62,7 @@ void Rating::readFromTextFile(std::ifstream& in) {
     if (in.fail()) throw std::runtime_error("Failed to read username");
     username = MyString(buffer);
 
-    // Read rating line
-    in >> rating;
-    if (in.fail()) throw std::runtime_error("Failed to read rating value");
-    in.ignore(); // Consume newline
+    
 
     // Validate
     if (!isValidRating(rating)) {
