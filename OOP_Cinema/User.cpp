@@ -1,13 +1,13 @@
 #include "User.h"
 
-User::User() : username(""), password(""), isAdmin(false), tickets(0), watchedMovies(0), balance(0){}
+User::User() : username(""), password(""), isAdmin(false), tickets(0), watchedMovieIds(0), balance(0){}
 
-User::User(const MyString& username, const MyString& password, bool isAdmin, MyVector<Ticket> tickets, MyVector<Movie> watchedMovies, unsigned balance)
+User::User(const MyString& username, const MyString& password, bool isAdmin, MyVector<Ticket> tickets, MyVector<unsigned> watchedMovieIds, unsigned balance)
 {
 	setUsername(username);
 	setPassword(password);
 	setTickets(tickets);
-	setWatchedMovies(watchedMovies);
+	setWatchedMovieIds(watchedMovieIds);
 	setBalance(balance);
 	setAdmin(isAdmin);
 }
@@ -27,14 +27,14 @@ unsigned User::getBalance() const
 	return balance;
 }
 
-const MyVector<Ticket>& User::getTickets() const
+const MyVector<Ticket> User::getTickets() const
 {
 	return tickets;
 }
 
-const MyVector<Movie>& User::getWatchedMovies() const
+const MyVector<unsigned> User::getWatchedMovieIds() const
 {
-	return watchedMovies;
+	return watchedMovieIds;
 }
 
 const bool User::getIsAdmin() const
@@ -68,9 +68,9 @@ void User::setTickets(const MyVector<Ticket>& tickets)
 	this->tickets = tickets;
 }
 
-void User::setWatchedMovies(const MyVector<Movie>& watchedMovies)
+void User::setWatchedMovieIds(const MyVector<unsigned>& watchedMovieIds)
 {
-	this->watchedMovies = watchedMovies;
+	this->watchedMovieIds = watchedMovieIds;
 }
 
 void User::setAdmin(bool isAdmin)
@@ -78,36 +78,66 @@ void User::setAdmin(bool isAdmin)
 	this->isAdmin = isAdmin;
 }
 
-void User::addTicket(const Ticket& ticket)
-{
-	//...
+
+void User::writeToFile(std::ofstream& out) const {
+    if (!out.is_open()) {
+        throw std::runtime_error("Output file stream is not open");
+    }
+
+    // Write username and password
+    writeStringToFile(out, username);
+    writeStringToFile(out, password);
+
+    // Write admin status and balance
+    out.write(reinterpret_cast<const char*>(&isAdmin), sizeof(isAdmin));
+    out.write(reinterpret_cast<const char*>(&balance), sizeof(balance));
+
+    // Write tickets
+    size_t ticketCount = tickets.getSize();
+    out.write(reinterpret_cast<const char*>(&ticketCount), sizeof(ticketCount));
+    for (size_t i = 0; i < ticketCount; i++) {
+        tickets[i].writeToFile(out);
+    }
+
+    // Write watched movies
+    size_t movieCount = watchedMovieIds.getSize();
+    out.write(reinterpret_cast<const char*>(&movieCount), sizeof(movieCount));
+    for (size_t i = 0; i < movieCount; i++) {
+        out.write(reinterpret_cast<const char*>(&watchedMovieIds[i]), sizeof(unsigned));
+    }
 }
 
-void User::addWatchedMovie(const Movie& movie)
-{
-	//...
-}
+void User::readFromFile(std::ifstream& in) {
+    if (!in.is_open()) {
+        throw std::runtime_error("Input file stream is not open");
+    }
 
-void User::writeToFile(std::ofstream& ofs) const
-{
-	username.writeToFile(ofs);
-	password.writeToFile(ofs);
+    // Read username and password
+    username = readStringFromFile(in);
+    password = readStringFromFile(in);
 
-	// Write other primitive types
-	ofs.write(reinterpret_cast<const char*>(&isAdmin), sizeof(isAdmin));
-	ofs.write(reinterpret_cast<const char*>(&balance), sizeof(balance));
+    // Read admin status and balance
+    in.read(reinterpret_cast<char*>(&isAdmin), sizeof(isAdmin));
+    in.read(reinterpret_cast<char*>(&balance), sizeof(balance));
 
-	// Write tickets
-	size_t ticketCount = tickets.getSize();
-	ofs.write(reinterpret_cast<const char*>(&ticketCount), sizeof(ticketCount));
-	for (size_t i = 0; i < ticketCount; i++) {
-		tickets[i].writeToFile(ofs);
-	}
+    // Read tickets
+    size_t ticketCount;
+    in.read(reinterpret_cast<char*>(&ticketCount), sizeof(ticketCount));
+    tickets.clear();
+    for (size_t i = 0; i < ticketCount; i++) {
+        Ticket ticket;
+        ticket.readFromFile(in);
+        tickets.push_back(ticket);
+    }
 
-	// Write watched movies
-	size_t movieCount = watchedMovies.getSize();
-	ofs.write(reinterpret_cast<const char*>(&movieCount), sizeof(movieCount));
-	for (size_t i = 0; i < movieCount; i++) {
-		watchedMovies[i].writeToFile(ofs);
-	}
+    // Read watched movies
+    size_t movieCount;
+    in.read(reinterpret_cast<char*>(&movieCount), sizeof(movieCount));
+    watchedMovieIds.clear();
+
+    for (size_t i = 0; i < movieCount; i++) {
+        unsigned movieId;
+        in.read(reinterpret_cast<char*>(&movieId), sizeof(movieId));
+        watchedMovieIds.push_back(movieId);
+    }
 }

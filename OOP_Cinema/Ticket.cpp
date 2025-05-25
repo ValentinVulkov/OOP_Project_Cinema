@@ -3,18 +3,17 @@
 #include "Seat.h"
 #include <iostream>
 
-Ticket::Ticket() : movie(), seat() {}
+Ticket::Ticket() : movieId(), seat(), price() {}
 
-Ticket::Ticket(const Movie& movie, const Seat& seat, double price)
-{
-	setMovie(movie);
+Ticket::Ticket(unsigned movieId, const Seat& seat, double price){
 	setSeat(seat);
 	setPrice(price);
+    setMovieId(movieId);
 }
 
-const Movie& Ticket::getMovie() const
+unsigned Ticket::getMovieId() const
 {
-	return movie;
+	return movieId;
 }
 
 const Seat& Ticket::getSeat() const
@@ -27,9 +26,11 @@ double Ticket::getPrice() const
 	return price;
 }
 
-void Ticket::setMovie(const Movie& movie)
+
+void Ticket::setMovieId(unsigned movieId)
 {
-	this->movie = movie;
+	this->movieId = movieId;
+
 }
 
 void Ticket::setSeat(const Seat& seat)
@@ -46,30 +47,21 @@ void Ticket::setPrice(double price)
 	this->price = price;
 }
 
-void Ticket::printTicketInfo() const
-{
-	std::cout << "Ticket Information:" << std::endl;
-	std::cout << "Movie: " << movie.getTitle() << std::endl;
-	std::cout << "Seat: Row " << seat.getRow() << ", Column " << seat.getCol() << std::endl;
-	std::cout << "Reserved: " << (seat.getReserved() ? "Yes" : "No") << std::endl;
+void Ticket::printTicketInfo() const {
+    std::cout << "Ticket Information:\n";
+    std::cout << "Movie Id: " << movieId << "\n";
+    std::cout << "Seat: Row " << seat.getRow() << ", Column " << seat.getCol() << "\n";
+    std::cout << "Price: " << price << " BGN\n";
 }
 
 void Ticket::writeToFile(std::ofstream& out) const {
-
-    movie.writeToFile(out);
-
-    seat.writeToFile(out);
-
-    out.write(reinterpret_cast<const char*>(&price), sizeof(price));
+	out.write(reinterpret_cast<const char*>(&movieId), sizeof(movieId));
+	seat.writeToFile(out);
+	out.write(reinterpret_cast<const char*>(&price), sizeof(price));
 }
 
 void Ticket::readFromFile(std::ifstream& in) {
-    // 1. Read Movie
-    movie.readFromFile(in);
-
-    // 2. Read Seat
-    seat.readFromFile(in);
-
-    // 3. Read primitive members
-    in.read(reinterpret_cast<char*>(&price), sizeof(price));
+	in.read(reinterpret_cast<char*>(&movieId), sizeof(movieId));
+	seat.readFromFile(in);
+	in.read(reinterpret_cast<char*>(&price), sizeof(price));
 }

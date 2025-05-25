@@ -1,25 +1,23 @@
 #pragma once
-#include "Movie.h"
 #include "Seat.h"
 
-// Forward declarations
-class Room;
-class Seat;
+class Movie; // Forward declaration
 
 class Ticket {
-    Movie movie;
-    Seat seat;
+	unsigned movieId;  // Store ID instead of pointer
+	Seat seat;
 	double price;
 
 public:
 	Ticket();
-	Ticket(const Movie& movie, const Seat& seat, double price);
+	Ticket(unsigned movieId, const Seat& seat, double price);
 
-	const Movie& getMovie() const;
+	unsigned getMovieId() const;
 	const Seat& getSeat() const;
 	double getPrice() const;
 
-	void setMovie(const Movie& movie);
+
+	void setMovieId(unsigned movieId);
 	void setSeat(const Seat& seat);
 	void setPrice(double price);
 
@@ -28,4 +26,6 @@ public:
 
 	void writeToFile(std::ofstream& out) const;
 	void readFromFile(std::ifstream& in);
+
+
 };

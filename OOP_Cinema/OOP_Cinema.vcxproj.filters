@@ -25,6 +25,9 @@
     <Filter Include="System">
       <UniqueIdentifier>{d89a104a-c72e-4ef8-8643-a1b50e28df88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{53f11526-86bb-45e5-9831-18cbdff17c13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Login.cpp">
@@ -69,13 +72,7 @@
     <ClCompile Include="Ticket.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Command.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="CinemaSystem.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="UserCommands.cpp">
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="UserFactory.cpp">
@@ -84,11 +81,17 @@
     <ClCompile Include="HelpFunc.cpp">
       <Filter>HelperClasses</Filter>
     </ClCompile>
-    <ClCompile Include="readFromFile.cpp">
-      <Filter>HelperClasses</Filter>
-    </ClCompile>
     <ClCompile Include="Hour.cpp">
       <Filter>HelperClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="CinemaSystemLauncher.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandFactory.cpp">
+      <Filter>Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,23 +143,31 @@
     <ClInclude Include="CinemaSystem.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="Command.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="UserCommands.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="UserFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HelpFunc.h">
       <Filter>HelperClasses</Filter>
     </ClInclude>
-    <ClInclude Include="readFromFile.h">
+    <ClInclude Include="Command.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="CinemaSystemLauncher.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandFactory.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="polymorphic_ptr.hpp">
       <Filter>HelperClasses</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Accounts.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Users.dat" />
+    <None Include="Movies.dat" />
+    <None Include="Rooms.dat" />
   </ItemGroup>
 </Project>

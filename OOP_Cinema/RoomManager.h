@@ -20,4 +20,7 @@ public:
         InvalidIDException(const char* msg) : std::runtime_error(msg) {}
     };
 	~RoomManager() = default;
+	RoomManager() = delete;
+
+    static void cleanupAfterRemoval(unsigned id);
 };

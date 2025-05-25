@@ -67,6 +67,8 @@ public:
     virtual void printInfo() const ;
 	virtual ~Movie() = default;
 
+    virtual double calculatePrice() const = 0;
+
     void writeToFile(std::ofstream& out) const;
     void readFromFile(std::ifstream& in);
 };

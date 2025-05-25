@@ -49,3 +49,14 @@ void RoomManager::releaseID(unsigned id) {
         nextID--;
     }
 }
+
+void RoomManager::cleanupAfterRemoval(unsigned id)
+{
+    unsigned insertPos = 0;
+    while (insertPos < freeIDs.getSize() && freeIDs[insertPos] < id) {
+        insertPos++;
+    }
+    freeIDs.insert(insertPos, id);
+}
+
+

@@ -40,7 +40,7 @@ bool Seat::getReserved() const
 }
 
 void Seat::writeToFile(std::ofstream& out) const {
-    if (!out.good()) throw std::runtime_error("Seat output stream error");
+    /*if (!out.good()) throw std::runtime_error("Seat output stream error");*/
 
     const char marker = 'S';
     out.write(&marker, 1);
@@ -50,7 +50,7 @@ void Seat::writeToFile(std::ofstream& out) const {
 }
 
 void Seat::readFromFile(std::ifstream& in) {
-    if (!in.good()) throw std::runtime_error("Seat input stream error");
+    /*if (!in.good()) throw std::runtime_error("Seat input stream error");*/
 
     char marker;
     in.read(&marker, 1);

@@ -100,7 +100,12 @@ const Seat& Room::getSeat(unsigned row, unsigned col) const {
 }
 
 void Room::writeToFile(std::ofstream& out) const {
-    if (!out.good()) throw std::runtime_error("Room output stream error");
+    if (!out.is_open()) {
+        throw std::runtime_error("Failed to open Rooms.dat for writing");
+    }
+    if (out.fail()) {
+        throw std::runtime_error("Stream is in a failed state before writing");
+    }
 
     const char marker = 'R';
     out.write(&marker, 1);
@@ -117,7 +122,17 @@ void Room::writeToFile(std::ofstream& out) const {
 }
 
 void Room::readFromFile(std::ifstream& in) {
-    if (!in.good()) throw std::runtime_error("Room input stream error");
+    if (!in.good()) {
+        if (!in.is_open()) {
+            throw std::runtime_error("Stream not open. Check file path/permissions.");
+        }
+        if (in.fail()) {
+            throw std::runtime_error("Stream failed (e.g., disk full or bad write).");
+        }
+        if (in.bad()) {
+            throw std::runtime_error("Critical stream error (e.g., no permission).");
+        }
+    }
 
     char marker;
     in.read(&marker, 1);

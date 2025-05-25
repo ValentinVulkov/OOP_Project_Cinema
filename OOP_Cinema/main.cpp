@@ -3,11 +3,13 @@
 #include "MyString.h"
 #include "Login.h"
 #include "Hour.h"
+#include "CinemaSystem.h"
+#include "CinemaSystemLauncher.h"
+
 
 
 int main()
 {
-	Hour h1(23, 30);
-	h1 = h1 + 91;
-	std::cout << h1;
+	CinemaSystemLauncher::run();
+	return 0;
 }

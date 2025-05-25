@@ -1,6 +1,7 @@
 #pragma once
 #include "MyString.h"
 #include "MyVector.hpp"
+#include "polymorphic_ptr.hpp"
 #include "User.h"
 #include "Movie.h"
 #include "ActionMovie.h"
@@ -13,6 +14,8 @@
 #include "fstream"
 class CinemaSystem
 {
+public:
+
 	User* currentUser = nullptr;
 
 	MyVector<User> users;
@@ -20,22 +23,24 @@ class CinemaSystem
 	MyVector<Room> rooms;
 	MyVector<Ticket> tickets;
 
-	bool userExists(const User* user) const;
-	size_t findBankByUsername(const MyString& username) const;
-
-	void writeToFile() const;
-	void readFromFile();
-
 	void saveUsers() const;
-	void saveBanks() const;
+	void saveRooms() const;
 	void saveMovies() const;
 
 	void loadUsers();
-	void loadBanks();
+	void loadRooms();
 	void loadMovies();
+
+	void Login();
+	void setCurrentUser(User* user);
+	User* getCurrentUser() const;
+
+	bool removeRoomById(unsigned id);
 
 	CinemaSystem();
 	~CinemaSystem();
+
+
 
 public: 
 	static CinemaSystem& getInstance();
@@ -43,12 +48,15 @@ public:
 	CinemaSystem(const CinemaSystem& other) = delete;
 	CinemaSystem& operator=(const CinemaSystem& other) = delete;
 
-	void addMovie(const Movie& movie);
 
-	void addUser(const MyString& username, const MyString& password, bool isAdmin, MyVector<Ticket>& tickets, MyVector<Movie>& watchedMovies);
+	size_t getMoviesCount() const;
+	Movie* getMovieByIndex(size_t index);
+	size_t getRoomsCount() const;
+	const Room& getRoomByIndex(size_t index) const;
+	size_t getUsersCount() const;
 
-	void addRoom(const Room& room);
-
-
+	bool userExists(const User* user) const;
+	User* findUserByUsername(const MyString& username);
+	const User* findUserByUsername(const MyString& username) const;
 };
 
