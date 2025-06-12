@@ -1,4 +1,4 @@
-#include "Ticket.h"
+﻿#include "Ticket.h"
 #include "Room.h"
 #include "Seat.h"
 #include <iostream>
@@ -54,14 +54,26 @@ void Ticket::printTicketInfo() const {
     std::cout << "Price: " << price << " BGN\n";
 }
 
-void Ticket::writeToFile(std::ofstream& out) const {
-	out.write(reinterpret_cast<const char*>(&movieId), sizeof(movieId));
-	seat.writeToTextFile(out);
-	out.write(reinterpret_cast<const char*>(&price), sizeof(price));
+void Ticket::writeToTextFile(std::ofstream& out) const {
+    if (!out.is_open()) {
+        throw std::runtime_error("Output file stream is not open");
+    }
+
+    out << movieId << " ";          // Записване на movieId
+    out << seat.getRow() << " ";    // Записване на ред
+    out << seat.getCol() << " ";    // Записване на колона
+    out << price << "\n";           // Записване на цена с нов ред
 }
 
-void Ticket::readFromFile(std::ifstream& in) {
-	in.read(reinterpret_cast<char*>(&movieId), sizeof(movieId));
-	seat.readFromTextFile(in);
-	in.read(reinterpret_cast<char*>(&price), sizeof(price));
+void Ticket::readFromTextFile(std::ifstream& in) {
+    if (!in.is_open()) {
+        throw std::runtime_error("Input file stream is not open");
+    }
+
+    unsigned row, col;
+    in >> movieId >> row >> col >> price;
+
+    seat.setRow(row);      // Задаване на ред
+    seat.setCol(col);      // Задаване на колона
+    in.ignore();           // Прескачане на нов ред
 }

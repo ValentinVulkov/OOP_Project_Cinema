@@ -21,7 +21,6 @@ public:
 	MyVector<User> users;
 	MyVector<Movie*> movies;
 	MyVector<Room> rooms;
-	MyVector<Ticket> tickets;
 
 	void saveUsers() const;
 	void saveRooms() const;

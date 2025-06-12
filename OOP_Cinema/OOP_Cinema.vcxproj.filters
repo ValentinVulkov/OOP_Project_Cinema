@@ -75,9 +75,6 @@
     <ClCompile Include="CinemaSystem.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="UserFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="HelpFunc.cpp">
       <Filter>HelperClasses</Filter>
     </ClCompile>
@@ -96,9 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Login.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="User.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MyVector.hpp">
@@ -158,6 +152,9 @@
     <ClInclude Include="polymorphic_ptr.hpp">
       <Filter>HelperClasses</Filter>
     </ClInclude>
+    <ClInclude Include="User.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Accounts.txt" />
@@ -167,7 +164,7 @@
     <Text Include="Movies.txt">
       <Filter>Text files</Filter>
     </Text>
-    <Text Include="DateTest.txt">
+    <Text Include="Users.txt">
       <Filter>Text files</Filter>
     </Text>
   </ItemGroup>

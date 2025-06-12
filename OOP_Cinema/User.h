@@ -4,6 +4,7 @@
 #include "Movie.h"
 #include "Ticket.h"
 #include "HelpFunc.h"
+
 class User
 {
 protected:
@@ -12,30 +13,31 @@ protected:
 	bool isAdmin;
 	MyVector<Ticket> tickets;
 	MyVector<unsigned> watchedMovieIds;
-	unsigned balance;
+	double balance;
 
 public:
 	User();
-	User(const MyString& username, const MyString& password, bool isAdmin, MyVector<Ticket> tickets, MyVector<unsigned> watchedMovieIds, unsigned balance);
+	User(const MyString& username, const MyString& password, bool isAdmin, MyVector<Ticket> tickets, MyVector<unsigned> watchedMovieIds, double balance);
 
 	const MyString& getUsername() const;
 	const MyString& getPassword() const;
-	unsigned getBalance() const;
+	double getBalance() const;
 	const MyVector<Ticket> getTickets() const;
 	const MyVector<unsigned> getWatchedMovieIds() const;
 	const bool getIsAdmin() const;
 
 	void setUsername(const MyString& username);
 	void setPassword(const MyString& password);
-	void setBalance(unsigned balance);
+	void setBalance(double balance);
 	void setTickets(const MyVector<Ticket>& tickets);
 	void setWatchedMovieIds(const MyVector<unsigned>& watchedMovieIds);
 	void setAdmin(bool isAdmin);
 	~User() = default;
 
 
-	
-	void writeToFile(std::ofstream& ofs) const;
-	void readFromFile(std::ifstream& ifs);
+	void writeToTextFile(std::ofstream& ofs) const;
+	void readFromTextFile(std::ifstream& ifs);
+
+	void printInfo() const;
 };
 

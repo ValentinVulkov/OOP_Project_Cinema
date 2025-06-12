@@ -1,8 +1,8 @@
-#include "User.h"
+﻿#include "User.h"
 
 User::User() : username(""), password(""), isAdmin(false), tickets(0), watchedMovieIds(0), balance(0){}
 
-User::User(const MyString& username, const MyString& password, bool isAdmin, MyVector<Ticket> tickets, MyVector<unsigned> watchedMovieIds, unsigned balance)
+User::User(const MyString& username, const MyString& password, bool isAdmin, MyVector<Ticket> tickets, MyVector<unsigned> watchedMovieIds, double balance)
 {
 	setUsername(username);
 	setPassword(password);
@@ -22,7 +22,7 @@ const MyString& User::getPassword() const
 	return password;
 }
 
-unsigned User::getBalance() const
+double User::getBalance() const
 {
 	return balance;
 }
@@ -48,6 +48,7 @@ void User::setUsername(const MyString& username)
 	{
 		throw std::invalid_argument("Username must be at least 3 characters long.");
 	}
+    this->username = username;
 }
 
 void User::setPassword(const MyString& password)
@@ -56,9 +57,10 @@ void User::setPassword(const MyString& password)
 	{
 		throw std::invalid_argument("Password must be at least 6 characters long.");
 	}
+    this->password = password;
 }
 
-void User::setBalance(unsigned balance)
+void User::setBalance(double balance)
 {
 	this->balance = balance;
 }
@@ -79,65 +81,90 @@ void User::setAdmin(bool isAdmin)
 }
 
 
-void User::writeToFile(std::ofstream& out) const {
-    if (!out.is_open()) {
-        throw std::runtime_error("Output file stream is not open");
+
+
+void User::printInfo() const
+{
+    unsigned ticketCount = tickets.getSize();
+    unsigned watchedMoviesCount = watchedMovieIds.getSize();
+
+    std::cout << "User info:" << '\n';
+    std::cout << "Username: " << username << '\n';
+    std::cout << "Password: " << password << '\n';
+    std::cout << "Is an admin: " << (isAdmin ? "yes" : "no") << '\n';
+    std::cout << "Ticket count: " << tickets.getSize() << '\n';
+    std::cout << "Tickets:" << '\n';
+    for (unsigned i = 0; i < ticketCount; i++)
+    {
+        tickets[i].printTicketInfo();
     }
-
-    // Write username and password
-    writeStringToTextFile(out, username);
-    writeStringToTextFile(out, password);
-
-    // Write admin status and balance
-    out.write(reinterpret_cast<const char*>(&isAdmin), sizeof(isAdmin));
-    out.write(reinterpret_cast<const char*>(&balance), sizeof(balance));
-
-    // Write tickets
-    size_t ticketCount = tickets.getSize();
-    out.write(reinterpret_cast<const char*>(&ticketCount), sizeof(ticketCount));
-    for (size_t i = 0; i < ticketCount; i++) {
-        tickets[i].writeToFile(out);
+    std::cout << "Watched movie count: " << watchedMovieIds.getSize() << '\n';
+    std::cout << "Watched movies:" << '\n';
+    for (unsigned i = 0; i < watchedMoviesCount; i++)
+    {
+        std::cout << watchedMovieIds[i] << '\n';
     }
+    std::cout << "Balance: " << balance;
 
-    // Write watched movies
-    size_t movieCount = watchedMovieIds.getSize();
-    out.write(reinterpret_cast<const char*>(&movieCount), sizeof(movieCount));
-    for (size_t i = 0; i < movieCount; i++) {
-        out.write(reinterpret_cast<const char*>(&watchedMovieIds[i]), sizeof(unsigned));
-    }
 }
 
-void User::readFromFile(std::ifstream& in) {
-    if (!in.is_open()) {
-        throw std::runtime_error("Input file stream is not open");
+
+void User::writeToTextFile(std::ofstream& out) const {
+    writeStringToTextFile(out, username);
+    writeStringToTextFile(out, password);
+    out << (isAdmin ? 1 : 0) << "\n";
+    out << balance << "\n";
+
+    // Write tickets
+    out << tickets.getSize() << "\n";
+    for (size_t i = 0; i < tickets.getSize(); i++) {
+        tickets[i].writeToTextFile(out);
     }
 
-    // Read username and password
+    // Write watched movie IDs
+    out << watchedMovieIds.getSize() << "\n";
+    for (size_t i = 0; i < watchedMovieIds.getSize(); i++) {
+        out << watchedMovieIds[i];
+        if (i < watchedMovieIds.getSize() - 1) {
+            out << " ";
+        }
+    }
+    out << "\n";
+}
+
+void User::readFromTextFile(std::ifstream& in) {
     username = readStringFromTextFile(in);
     password = readStringFromTextFile(in);
 
-    // Read admin status and balance
-    in.read(reinterpret_cast<char*>(&isAdmin), sizeof(isAdmin));
-    in.read(reinterpret_cast<char*>(&balance), sizeof(balance));
+    int adminFlag;
+    in >> adminFlag;
+    isAdmin = (adminFlag == 1);
+
+    in >> balance;
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     // Read tickets
     size_t ticketCount;
-    in.read(reinterpret_cast<char*>(&ticketCount), sizeof(ticketCount));
+    in >> ticketCount;
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
     tickets.clear();
     for (size_t i = 0; i < ticketCount; i++) {
         Ticket ticket;
-        ticket.readFromFile(in);
+        ticket.readFromTextFile(in);
         tickets.push_back(ticket);
     }
 
-    // Read watched movies
-    size_t movieCount;
-    in.read(reinterpret_cast<char*>(&movieCount), sizeof(movieCount));
-    watchedMovieIds.clear();
+    // Read watched movie IDs
+    size_t watchedCount;
+    in >> watchedCount;
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    for (size_t i = 0; i < movieCount; i++) {
+    watchedMovieIds.clear();
+    for (size_t i = 0; i < watchedCount; i++) {
         unsigned movieId;
-        in.read(reinterpret_cast<char*>(&movieId), sizeof(movieId));
+        in >> movieId;
         watchedMovieIds.push_back(movieId);
     }
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }

@@ -30,24 +30,7 @@ const User* CinemaSystem::findUserByUsername(const MyString& username) const {
     return nullptr;
 }
 
-void CinemaSystem::saveUsers() const
-{
-    std::ofstream out("Users.txt");
-    if (!out.is_open()) {
-        throw std::runtime_error("Could not open users file for writing");
-    }
 
-    // Write number of users
-    size_t userCount = users.getSize();
-    out.write(reinterpret_cast<const char*>(&userCount), sizeof(userCount));
-
-    // Write each user
-    for (size_t i = 0; i < userCount; i++) {
-        users[i].writeToFile(out);
-    }
-
-    out.close();
-}
 
 void CinemaSystem::saveRooms() const {
     std::ofstream out("Rooms.txt");
@@ -87,36 +70,6 @@ void CinemaSystem::saveMovies() const
     out.close();
 }
 
-void CinemaSystem::loadUsers()
-{
-    std::ifstream in("Users.dat", std::ios::binary);
-    if (!in.is_open()) {
-        users.clear(); // Initialize empty user list
-        return; // No file exists yet (not an error)
-    }
-
-    // Check if file is empty
-    in.seekg(0, std::ios::end);
-    if (in.tellg() == 0) {
-        users.clear();
-        in.close();
-        return;
-    }
-    in.seekg(0, std::ios::beg);
-    users.clear();
-
-    // Read number of users
-    size_t userCount;
-    in.read(reinterpret_cast<char*>(&userCount), sizeof(userCount));
-
-    for (size_t i = 0; i < userCount; i++) {
-        User user;
-        user.readFromFile(in);
-        users.push_back(user);
-    }
-
-    in.close();
-}
 
 void CinemaSystem::loadRooms()
 {
@@ -179,7 +132,6 @@ void CinemaSystem::loadMovies()
         default:
             throw std::runtime_error("Unknown movie genre in file");
         }
-        std::cout << genreInt;
         try {
             movie->readFromTextFile(in);
             movies.push_back(movie);
@@ -297,3 +249,44 @@ size_t CinemaSystem::getUsersCount() const {
     return users.getSize();
 }
 
+
+
+void CinemaSystem::saveUsers() const {
+    std::ofstream out("Users.txt");
+    if (!out.is_open()) {
+        throw std::runtime_error("Could not open users file for writing");
+    }
+
+    // Write total number of users
+    out << users.getSize() << '\n';
+
+    // Write each user's data
+    for (size_t i = 0; i < users.getSize(); i++) {
+        users[i].writeToTextFile(out);
+    }
+
+    out.close();
+}
+
+
+void CinemaSystem::loadUsers() {
+    std::ifstream in("Users.txt");
+    if (!in.is_open()) {
+        // File doesn't exist yet - not an error
+        users.clear();
+        return;
+    }
+
+    users.clear();
+    size_t userCount;
+    in >> userCount;
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    for (size_t i = 0; i < userCount; i++) {
+        User user;
+        user.readFromTextFile(in);
+        users.push_back(user);
+    }
+
+    in.close();
+}

@@ -175,7 +175,7 @@ template<typename T>
 void MyVector<T>::push_back(const T& elem)
 {
 	if (size == capacity)
-		resize(capacity * 2);
+		resize( ( capacity>0) ?  capacity * 2 : 8 ); //resize(GETNEXTCAP(capacity)
 
 	data[size++] = elem;
 }
