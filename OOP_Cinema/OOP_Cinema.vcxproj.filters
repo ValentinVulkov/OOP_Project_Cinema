@@ -81,13 +81,13 @@
     <ClCompile Include="Hour.cpp">
       <Filter>HelperClasses</Filter>
     </ClCompile>
-    <ClCompile Include="Command.cpp">
+    <ClCompile Include="CommandHandler.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
     <ClCompile Include="CinemaSystemLauncher.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="CommandFactory.cpp">
+    <ClCompile Include="Program.cpp">
       <Filter>Commands</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,20 +140,20 @@
     <ClInclude Include="HelpFunc.h">
       <Filter>HelperClasses</Filter>
     </ClInclude>
-    <ClInclude Include="Command.h">
+    <ClInclude Include="CommandHandler.h">
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="CinemaSystemLauncher.h">
       <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandFactory.h">
-      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="polymorphic_ptr.hpp">
       <Filter>HelperClasses</Filter>
     </ClInclude>
     <ClInclude Include="User.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Program.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

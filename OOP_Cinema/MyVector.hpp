@@ -92,6 +92,13 @@ void MyVector<T>::moveFrom(MyVector<T>&& other)
 template<typename T>
 void MyVector<T>::resize(size_t newCapacity)
 {
+	if (newCapacity == 0) {
+		newCapacity = INITIAL_CAPACITY;  // Never allow 0 capacity
+	}
+
+	if (newCapacity < size) {
+		size = newCapacity;  // Truncate if necessary
+	}
 
 	T* newData = new T[newCapacity];
 
@@ -100,10 +107,8 @@ void MyVector<T>::resize(size_t newCapacity)
 	}
 
 	delete[] data;
-
 	capacity = newCapacity;
 	data = newData;
-
 }
 
 template<typename T>
@@ -118,19 +123,21 @@ template<typename T>
 MyVector<T>::MyVector(size_t n)
 {
 	size = n;
-	capacity = n;
+	capacity = (n == 0) ? INITIAL_CAPACITY : n;  // Never allow 0 capacity
 	data = new T[capacity]{};
 }
+
 
 template<typename T>
 MyVector<T>::MyVector(size_t n, const T& elem)
 {
-	size = capacity = n;
+	size = capacity = (n == 0) ? INITIAL_CAPACITY : n;
 	data = new T[capacity]{};
 
-	for (size_t i = 0; i < size; i++) {
+	for (size_t i = 0; i < size && i < n; i++) {  // Only fill actual size
 		data[i] = elem;
 	}
+	size = n;  // Set correct size
 }
 
 template<typename T>
@@ -174,18 +181,20 @@ MyVector<T>::~MyVector()
 template<typename T>
 void MyVector<T>::push_back(const T& elem)
 {
-	if (size == capacity)
-		resize( ( capacity>0) ?  capacity * 2 : 8 ); //resize(GETNEXTCAP(capacity)
-
+	if (size == capacity) {
+		size_t newCapacity = (capacity == 0) ? 8 : capacity * 2;
+		resize(newCapacity);
+	}
 	data[size++] = elem;
 }
 
 template<typename T>
 void MyVector<T>::push_back(T&& elem)
 {
-	if (size == capacity)
-		resize(capacity * 2);
-
+	if (size == capacity) {
+		size_t newCapacity = (capacity == 0) ? 8 : capacity * 2;
+		resize(newCapacity);
+	}
 	data[size++] = std::move(elem);
 }
 

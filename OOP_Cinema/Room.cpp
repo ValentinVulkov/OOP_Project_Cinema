@@ -9,17 +9,13 @@ Room::Room(unsigned rows, unsigned cols)
 {
     seats = MyVector<MyVector<Seat>>(rows, MyVector<Seat>(cols));
 
-
-    //for (unsigned i = 0; i < rows; ++i) {
-    //    MyVector<Seat> currentRow;  
-
-    //    
-    //    for (unsigned j = 0; j < cols; ++j) {
-    //        currentRow.push_back(Seat()); 
-    //    }
-
-    //    seats.push_back(currentRow); 
-    //}
+    // Initialize seat coordinates properly
+    for (unsigned i = 0; i < rows; ++i) {
+        for (unsigned j = 0; j < cols; ++j) {
+            seats[i][j].setRow(i);
+            seats[i][j].setCol(j);
+        }
+    }
 }
 
 

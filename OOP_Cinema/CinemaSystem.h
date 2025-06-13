@@ -31,10 +31,15 @@ public:
 	void loadMovies();
 
 	void Login();
+	void Register();
 	void setCurrentUser(User* user);
 	User* getCurrentUser() const;
 
-	/*bool removeRoomById(unsigned id);*/
+	void addMovie(Movie* movie);
+
+	void closeHaul(int index);
+
+
 
 	CinemaSystem();
 	~CinemaSystem();

@@ -172,6 +172,25 @@ void CinemaSystem::Login()
     std::cout << "Login successful. Welcome, " << user->getUsername() << "!" << std::endl;
 }
 
+void CinemaSystem::Register()
+{
+    std::cout << "Registering a new account. " << '\n';
+    std::cout << "Enter username: " << '\n';
+    MyString username;
+    std::cin >> username;
+    std::cout << "Enter password: " << '\n';
+    MyString password;
+    std::cin >> password;
+
+    User user(username, password, 0, 0, 0, 0);
+    users.push_back(user);
+
+    std::cout << "Account created succesfully" << '\n';
+    Login();
+    return;
+
+}
+
 
 void CinemaSystem::setCurrentUser(User* user)
 {
@@ -193,6 +212,30 @@ User* CinemaSystem::getCurrentUser() const
 		return nullptr;
 	}
 	return currentUser;
+}
+
+void CinemaSystem::addMovie(Movie* movie)
+{
+    movies.push_back(movie);
+}
+
+void CinemaSystem::closeHaul(int index)
+{
+    if (index < 0 || index >= static_cast<int>(rooms.getSize())) {
+        throw std::out_of_range("Invalid room index");
+    }
+
+    // Create a new vector without the room at the specified index
+    MyVector<Room> newRooms;
+
+    for (size_t i = 0; i < rooms.getSize(); i++) {
+        if (static_cast<int>(i) != index) {
+            newRooms.push_back(rooms[i]);
+        }
+    }
+
+    // Replace the old rooms vector with the new one
+    rooms = newRooms;
 }
 
 
@@ -290,3 +333,6 @@ void CinemaSystem::loadUsers() {
 
     in.close();
 }
+
+
+

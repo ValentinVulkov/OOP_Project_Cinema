@@ -130,8 +130,7 @@
     <ClCompile Include="ActionMovie.cpp" />
     <ClCompile Include="CinemaSystem.cpp" />
     <ClCompile Include="CinemaSystemLauncher.cpp" />
-    <ClCompile Include="Command.cpp" />
-    <ClCompile Include="CommandFactory.cpp" />
+    <ClCompile Include="CommandHandler.cpp" />
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="DocumentaryMovie.cpp" />
     <ClCompile Include="DramaMovie.cpp" />
@@ -141,6 +140,7 @@
     <ClCompile Include="Login.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyString.cpp" />
+    <ClCompile Include="Program.cpp" />
     <ClCompile Include="Rating.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="Seat.cpp" />
@@ -151,8 +151,7 @@
     <ClInclude Include="ActionMovie.h" />
     <ClInclude Include="CinemaSystem.h" />
     <ClInclude Include="CinemaSystemLauncher.h" />
-    <ClInclude Include="Command.h" />
-    <ClInclude Include="CommandFactory.h" />
+    <ClInclude Include="CommandHandler.h" />
     <ClInclude Include="Date.h" />
     <ClInclude Include="DocumentaryMovie.h" />
     <ClInclude Include="DramaMovie.h" />
@@ -163,6 +162,7 @@
     <ClInclude Include="MyString.h" />
     <ClInclude Include="MyVector.hpp" />
     <ClInclude Include="polymorphic_ptr.hpp" />
+    <ClInclude Include="Program.h" />
     <ClInclude Include="Rating.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Seat.h" />
