@@ -8,9 +8,13 @@
 #include "Program.h"
 #include "CinemaSystemLauncher.h"
 
+
+
 int main()
 {
+
 	CinemaSystemLauncher::run();
 	return 0;
 
 }
+

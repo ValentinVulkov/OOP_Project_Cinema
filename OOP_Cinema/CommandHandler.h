@@ -67,6 +67,8 @@ public:
     void list_users(const MyVector<MyString>& inputs);
     void remove_user(const MyVector<MyString>& inputs);
     void checkIfTicketExpired(const MyVector<MyString>& inputs);
+    void removeMovieWithRefunds(unsigned movieId);
+
 
     ~CinemaCommandHandler() = default;
 
@@ -84,6 +86,8 @@ public:
         Date currentDate = getCurrentDate();
         return ticketDate < currentDate;
     }
+
+    
 };
 
 

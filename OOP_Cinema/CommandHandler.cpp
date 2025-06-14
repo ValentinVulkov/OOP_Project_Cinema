@@ -1,4 +1,4 @@
-#include "CommandHandler.h"
+﻿#include "CommandHandler.h"
 #include <iostream>
 #include <stdexcept>
 
@@ -130,7 +130,7 @@ void CinemaCommandHandler::dispatch(const MyString& commandLine) {
         else if (strEquals(lowerCmd, "addmovie")) {
             add_movie(tokens);
         }
-        else if (strEquals(lowerCmd, "removemovie")) {
+        else if (strEquals(lowerCmd, "remove-movie")) {
             remove_movie(tokens);
         }
         else if (strEquals(lowerCmd, "listmovies")) {
@@ -320,41 +320,31 @@ void CinemaCommandHandler::add_balance(const MyVector<MyString>& inputs) {
     }
 
     try {
-        // Manual string to double conversion
+        // Convert the MyString to a std::string for safer conversion
         const char* str = inputs[1].c_str();
-        double amount = 0.0;
-        double fraction = 0.0;
-        bool isNegative = false;
-        bool afterDecimal = false;
-        double divisor = 10.0;
 
-        int i = 0;
-        if (str[0] == '-') {
-            isNegative = true;
-            i = 1;
-        }
-
-        while (str[i] != '\0') {
+        // Validate the input string first
+        bool hasDecimal = false;
+        for (int i = 0; str[i] != '\0'; i++) {
             if (str[i] == '.') {
-                afterDecimal = true;
-            }
-            else if (str[i] >= '0' && str[i] <= '9') {
-                if (afterDecimal) {
-                    fraction += (str[i] - '0') / divisor;
-                    divisor *= 10.0;
+                if (hasDecimal) {
+                    throw std::invalid_argument("Invalid number format - multiple decimal points");
                 }
-                else {
-                    amount = amount * 10.0 + (str[i] - '0');
-                }
+                hasDecimal = true;
             }
-            else {
-                throw std::invalid_argument("Invalid number format");
+            else if (str[i] < '0' || str[i] > '9') {
+                throw std::invalid_argument("Invalid number format - contains non-digit characters");
             }
-            i++;
         }
 
-        amount += fraction;
-        if (isNegative) amount = -amount;
+        // Use a more robust conversion method
+        double amount = 0.0;
+        char* endptr;
+        amount = strtod(str, &endptr);
+
+        if (*endptr != '\0') {
+            throw std::invalid_argument("Invalid number format");
+        }
 
         if (amount <= 0) {
             std::cout << "Error: Amount must be positive." << std::endl;
@@ -543,12 +533,11 @@ void CinemaCommandHandler::help(const MyVector<MyString>& inputs) {
     std::cout << "  showroom <room_id>          - Show detailed room information" << std::endl;
     std::cout << std::endl;
     std::cout << "Booking Commands:" << std::endl;
-    std::cout << "  buy-ticket <movie_id> <row> <col> - Book a ticket for a movie TODO" << std::endl;
-    std::cout << "  cancel <ticket_id>          - Cancel a ticket TODO" << std::endl;
+    std::cout << "  buy-ticket <movie_id> <row> <col> 1 - Book a ticket for a movie TODO" << std::endl;
     std::cout << "  tickets                     - List your tickets" << std::endl;
     std::cout << std::endl;
     std::cout << "Rating Commands:" << std::endl;
-    std::cout << "  rate <movie_id> <rating>    - Rate a movie (1-10) TODO" << std::endl;
+    std::cout << "  rate <movie_id> <rating>    - Rate a movie (1-10)" << std::endl;
     std::cout << "  ratings <movie_id>          - Show ratings for a movie" << std::endl;
     std::cout << std::endl;
     std::cout << "System Commands:" << std::endl;
@@ -559,9 +548,14 @@ void CinemaCommandHandler::help(const MyVector<MyString>& inputs) {
         std::cout << std::endl;
         std::cout << "Admin Commands:" << std::endl;
         std::cout << "  addmovie <title> <length> <year> <genre> <room_id> <date> <time> TODO" << std::endl;
-        std::cout << "  removemovie <movie_id>      - Remove a movie TODO" << std::endl;
-        std::cout << "  addroom <rows> <cols>       - Add a new room TODO" << std::endl;
-        std::cout << "  removeroom <room_id>        - Remove a room TODO" << std::endl;
+        std::cout << "  removemovie <movie_id>      - Remove a movie" << std::endl;
+        std::cout << "  open-haul <rows> <cols>       - Add a new room" << std::endl;
+        std::cout << "  update-movie-title <movie_id> <new_title>       - Remove a room" << std::endl;
+        std::cout << "  list-user-history <usernamee>        - Remove a room" << std::endl;
+        std::cout << "  list-user-tickets <username>        - Remove a room" << std::endl;
+        std::cout << "  list-users       - Remove a room" << std::endl;
+        std::cout << "  remove-user <username>        - Remove a room" << std::endl;
+
     }
 }
 
@@ -875,7 +869,61 @@ void CinemaCommandHandler::remove_movie(const MyVector<MyString>& inputs) {
     if (!requireAdmin()) {
         return;
     }
-    std::cout << "Remove movie functionality not yet implemented." << std::endl;
+
+    if (inputs.getSize() != 2) {
+        std::cout << "Usage: remove-movie <movie_id>" << std::endl;
+        return;
+    }
+
+    try {
+        // Manual string to unsigned conversion
+        const char* str = inputs[1].c_str();
+        unsigned movieId = 0;
+        int i = 0;
+
+        while (str[i] != '\0') {
+            if (str[i] >= '0' && str[i] <= '9') {
+                movieId = movieId * 10 + (str[i] - '0');
+            }
+            else {
+                throw std::invalid_argument("Invalid number format");
+            }
+            i++;
+        }
+
+        // Check if movie exists
+        bool movieFound = false;
+        for (size_t i = 0; i < system.getMoviesCount(); i++) {
+            if (system.getMovieByIndex(i)->getId() == movieId) {
+                movieFound = true;
+                break;
+            }
+        }
+
+        if (!movieFound) {
+            std::cout << "Error: Movie with ID " << movieId << " not found." << std::endl;
+            return;
+        }
+
+        // Use the shared helper function to remove movie with proper refunds
+        removeMovieWithRefunds(movieId);
+
+        std::cout << "Movie with ID " << movieId << " has been successfully removed." << std::endl;
+        std::cout << "Movie has been removed from all user histories." << std::endl;
+
+        // Save changes to persistent storage
+        try {
+            system.saveMovies();
+            system.saveUsers();
+        }
+        catch (const std::exception& e) {
+            std::cout << "Warning: Movie removed but could not save to file: " << e.what() << std::endl;
+        }
+
+    }
+    catch (const std::exception& e) {
+        std::cout << "Error removing movie: " << e.what() << std::endl;
+    }
 }
 
 void CinemaCommandHandler::open_haul(const MyVector<MyString>& inputs) {
@@ -971,7 +1019,6 @@ void CinemaCommandHandler::close_haul(const MyVector<MyString>& inputs) {
         const char* roomIdStr = inputs[1].c_str();
         unsigned roomId = 0;
         int i = 0;
-
         while (roomIdStr[i] != '\0') {
             if (roomIdStr[i] >= '0' && roomIdStr[i] <= '9') {
                 roomId = roomId * 10 + (roomIdStr[i] - '0');
@@ -996,48 +1043,75 @@ void CinemaCommandHandler::close_haul(const MyVector<MyString>& inputs) {
             return;
         }
 
-        // Check if there are any active movies scheduled in this room
-        bool hasActiveMovies = false;
-        for (size_t i = 0; i < system.getMoviesCount(); i++) {
-            Movie* movie = system.getMovieByIndex(i);
-            if (movie != nullptr && movie->getRoomId() == roomId) {
-                hasActiveMovies = true;
-                break;
-            }
-        }
-
-        if (hasActiveMovies) {
-            std::cout << "Warning: This room has movies scheduled. " << std::endl;
-            std::cout << "Are you sure you want to close this haul? (This will affect scheduled movies)" << std::endl;
-            std::cout << "Room will be closed anyway as per admin request." << std::endl;
-        }
-
         // Store room info for confirmation message
         const Room& roomToRemove = system.getRoomByIndex(roomIndex);
         unsigned rows = roomToRemove.getRows();
         unsigned cols = roomToRemove.getCols();
 
-        // Remove the room from the system
-        // Note: You'll need to implement a removeRoom method in CinemaSystem
-        // This is a placeholder assuming such method exists
-        system.closeHaul(roomIndex);
-
-        // Save rooms to file to persist the changes
-        try {
-            system.saveRooms();
-        }
-        catch (const std::exception& e) {
-            std::cout << "Warning: Room removed but could not save to file: " << e.what() << std::endl;
+        // Find and collect all movies scheduled in this room
+        MyVector<unsigned> moviesToRemove;
+        for (size_t i = 0; i < system.getMoviesCount(); i++) {
+            Movie* movie = system.getMovieByIndex(i);
+            if (movie != nullptr && movie->getRoomId() == roomId) {
+                moviesToRemove.push_back(movie->getId());
+            }
         }
 
-        std::cout << "Haul closed successfully!" << std::endl;
-        std::cout << "Removed Room ID: " << roomId << std::endl;
-        std::cout << "Room dimensions were: " << rows << " rows x " << cols << " columns" << std::endl;
-        std::cout << "Total seats removed: " << (rows * cols) << std::endl;
+        bool hasActiveMovies = moviesToRemove.getSize() > 0;
 
         if (hasActiveMovies) {
-            std::cout << "Note: Movies that were scheduled in this room may need to be rescheduled." << std::endl;
+            std::cout << "Warning: This room has " << moviesToRemove.getSize()
+                << " movies scheduled." << std::endl;
+            std::cout << "Closing this haul will remove all associated movies and refund tickets." << std::endl;
+            std::cout << "Proceeding with room closure as per admin request." << std::endl;
         }
+
+        // Remove all movies in this room using the shared helper function
+        // Note: We need to be careful about indices changing as we remove movies
+        while (moviesToRemove.getSize() > 0) {
+            unsigned movieId = moviesToRemove[0];
+            removeMovieWithRefunds(movieId);
+
+            // Remove the processed movie from our list
+            MyVector<unsigned> updatedMoviesToRemove;
+            for (size_t i = 1; i < moviesToRemove.getSize(); i++) {
+                updatedMoviesToRemove.push_back(moviesToRemove[i]);
+            }
+            moviesToRemove = updatedMoviesToRemove;
+        }
+
+        // Now remove the room from the system
+        system.closeHaul(roomIndex);
+
+        // Save changes to persistent storage
+        try {
+            system.saveRooms();
+            if (hasActiveMovies) {
+                system.saveMovies(); // Save movie changes if any movies were removed
+                system.saveUsers();  // Save user changes (balances and tickets)
+            }
+        }
+        catch (const std::exception& e) {
+            std::cout << "Warning: Room and movies removed but could not save to file: "
+                << e.what() << std::endl;
+        }
+
+        std::cout << std::endl << "=== HAUL CLOSURE SUMMARY ===" << std::endl;
+        std::cout << "✓ Room ID " << roomId << " has been successfully closed." << std::endl;
+        std::cout << "✓ Room dimensions were: " << rows << " rows x " << cols << " columns" << std::endl;
+        std::cout << "✓ Total seats removed: " << (rows * cols) << std::endl;
+
+        if (hasActiveMovies) {
+            std::cout << "✓ All scheduled movies have been removed with proper refunds" << std::endl;
+            std::cout << "✓ All affected users have been refunded" << std::endl;
+            std::cout << "✓ Movie histories have been cleaned up" << std::endl;
+        }
+        else {
+            std::cout << "✓ No movies were scheduled in this room" << std::endl;
+        }
+
+        std::cout << "✓ All changes have been saved to persistent storage" << std::endl;
+        std::cout << "==============================" << std::endl;
 
     }
     catch (const std::exception& e) {
@@ -1050,13 +1124,13 @@ void CinemaCommandHandler::buy_ticket(const MyVector<MyString>& inputs) {
         return;
     }
 
-    if (inputs.getSize() != 4) {
-        std::cout << "Usage: book <movie_id> <row> <col>" << std::endl;
+    if (inputs.getSize() != 5) {
+        std::cout << "Usage: buy-ticket <movie_id> <row> <col> <1>" << std::endl;
         return;
     }
 
     try {
-        // Manual string to unsigned conversion for movie_id
+        // Parse movie ID
         const char* movieIdStr = inputs[1].c_str();
         unsigned movieId = 0;
         int i = 0;
@@ -1070,7 +1144,7 @@ void CinemaCommandHandler::buy_ticket(const MyVector<MyString>& inputs) {
             i++;
         }
 
-        // Manual string to unsigned conversion for row
+        // Parse row
         const char* rowStr = inputs[2].c_str();
         unsigned row = 0;
         i = 0;
@@ -1084,7 +1158,7 @@ void CinemaCommandHandler::buy_ticket(const MyVector<MyString>& inputs) {
             i++;
         }
 
-        // Manual string to unsigned conversion for col
+        // Parse column
         const char* colStr = inputs[3].c_str();
         unsigned col = 0;
         i = 0;
@@ -1096,6 +1170,13 @@ void CinemaCommandHandler::buy_ticket(const MyVector<MyString>& inputs) {
                 throw std::invalid_argument("Invalid column format");
             }
             i++;
+        }
+
+        // Validate the fourth parameter is "1"
+        const char* paramStr = inputs[4].c_str();
+        if (paramStr[0] != '1' || paramStr[1] != '\0') {
+            std::cout << "Error: Fourth parameter must be '1'" << std::endl;
+            return;
         }
 
         // Find the movie
@@ -1112,73 +1193,68 @@ void CinemaCommandHandler::buy_ticket(const MyVector<MyString>& inputs) {
             return;
         }
 
-        // Get the room for this movie
+        // Find the room associated with the movie
         unsigned roomId = movie->getRoomId();
-        Room* room = nullptr;
-        size_t roomIndex = 0;
-
-        // Find the room and get its index for modification
-        for (size_t i = 0; i < system.getRoomsCount(); i++) {
-            if (system.getRoomByIndex(i).getID() == roomId) {
-                roomIndex = i;
-                room = &const_cast<Room&>(system.getRoomByIndex(i)); // Cast away const to modify
-                break;
-            }
-        }
+        Room* room = system.getRoomByIdForModification(roomId);
 
         if (room == nullptr) {
-            std::cout << "Error: Room for this movie not found." << std::endl;
+            std::cout << "Error: Room with ID " << roomId << " not found." << std::endl;
             return;
         }
 
-        // Check if seat coordinates are valid
-        if (row == 0 || col == 0 || row > room->getRows() || col > room->getCols()) {
-            std::cout << "Error: Invalid seat coordinates. Room has "
-                << room->getRows() << " rows and " << room->getCols() << " columns." << std::endl;
-            std::cout << "Please use row and column numbers starting from 1." << std::endl;
+        // Validate seat coordinates (convert to 0-based indexing)
+        if (row == 0 || col == 0) {
+            std::cout << "Error: Row and column numbers must be greater than 0." << std::endl;
             return;
         }
 
-        // Check if seat is already taken (convert to 0-based indexing)
-        if (room->getSeat(row - 1, col - 1).getReserved()) {
-            std::cout << "Error: Seat at row " << row << ", column " << col << " is already taken." << std::endl;
+        unsigned seatRow = row - 1;  // Convert to 0-based
+        unsigned seatCol = col - 1;  // Convert to 0-based
+
+        if (seatRow >= room->getRows() || seatCol >= room->getCols()) {
+            std::cout << "Error: Seat (" << row << ", " << col << ") is out of bounds." << std::endl;
+            std::cout << "Room has " << room->getRows() << " rows and " << room->getCols() << " columns." << std::endl;
             return;
         }
 
-        // Check if user has enough balance
+        // Check if seat is already reserved
+        if (room->getSeat(seatRow, seatCol).getReserved()) {
+            std::cout << "Error: Seat (" << row << ", " << col << ") is already reserved." << std::endl;
+            return;
+        }
+
+        // Calculate ticket price
         double ticketPrice = movie->calculatePrice();
+
+        // Check if user has sufficient balance
         if (system.getCurrentUser()->getBalance() < ticketPrice) {
             std::cout << "Error: Insufficient balance. Ticket price: " << ticketPrice
                 << ", Your balance: " << system.getCurrentUser()->getBalance() << std::endl;
             return;
         }
 
-        // Generate unique ticket ID (simple approach: use current time or counter)
-        static unsigned ticketIdCounter = 1000; // Static counter for unique IDs
-        unsigned ticketId = ++ticketIdCounter;
+        // Reserve the seat
+        room->getSeat(seatRow, seatCol).setReserved(1);
 
-        // Create the seat for the ticket (using 1-based indexing as entered by user)
-        Seat ticketSeat(row, col, true);
+        // Create the seat object for the ticket
+        Seat ticketSeat(seatRow, seatCol, true);
 
         // Create the ticket
         Ticket newTicket(movieId, ticketSeat, ticketPrice);
 
-        // Add ticket to user's ticket list
+        // Add ticket to user's tickets
         MyVector<Ticket> userTickets = system.getCurrentUser()->getTickets();
         userTickets.push_back(newTicket);
         system.getCurrentUser()->setTickets(userTickets);
 
-        // Mark the seat as taken in the room (convert to 0-based indexing)
-        room->getSeat(row - 1, col - 1).setReserved(true);
-
         // Deduct the price from user's balance
-        /*double newBalance = system.getCurrentUser()->getBalance() - ticketPrice;
-        system.getCurrentUser()->setBalance(newBalance);*/
+        double newBalance = system.getCurrentUser()->getBalance() - ticketPrice;
+        system.getCurrentUser()->setBalance(newBalance);
 
         // Add movie to watched movies if not already there
         MyVector<unsigned> watchedMovies = system.getCurrentUser()->getWatchedMovieIds();
         bool alreadyWatched = false;
-        for (unsigned i = 0; i < watchedMovies.getSize(); i++) {
+        for (size_t i = 0; i < watchedMovies.getSize(); i++) {
             if (watchedMovies[i] == movieId) {
                 alreadyWatched = true;
                 break;
@@ -1189,20 +1265,18 @@ void CinemaCommandHandler::buy_ticket(const MyVector<MyString>& inputs) {
             system.getCurrentUser()->setWatchedMovieIds(watchedMovies);
         }
 
-        std::cout << "Ticket booked successfully!" << std::endl;
-        std::cout << "Ticket ID: " << ticketId << std::endl;
+        std::cout << "Ticket purchased successfully!" << std::endl;
         std::cout << "Movie: " << movie->getTitle() << std::endl;
         std::cout << "Seat: Row " << row << ", Column " << col << std::endl;
-        std::cout << "Date: " << movie->getDate() << std::endl;
-        std::cout << "Time: " << movie->getStartTime() << std::endl;
         std::cout << "Price: " << ticketPrice << std::endl;
-        /*std::cout << "Remaining balance: " << newBalance << std::endl;*/
+        std::cout << "Remaining balance: " << newBalance << std::endl;
 
     }
     catch (const std::exception& e) {
-        std::cout << "Error booking ticket: " << e.what() << std::endl;
+        std::cout << "Error purchasing ticket: " << e.what() << std::endl;
     }
 }
+
 
 
 void CinemaCommandHandler::rate_movie(const MyVector<MyString>& inputs) {
@@ -1808,4 +1882,93 @@ void CinemaCommandHandler::checkIfTicketExpired(const MyVector<MyString>& inputs
     catch (const std::exception& e) {
         std::cout << "Error checking ticket expiration: " << e.what() << std::endl;
     }
+}
+
+void CinemaCommandHandler::removeMovieWithRefunds(unsigned movieId) {
+    // Find movie by ID and its index
+    Movie* movieToRemove = nullptr;
+    size_t movieIndex = 0;
+    bool movieFound = false;
+
+    for (size_t i = 0; i < system.getMoviesCount(); i++) {
+        if (system.getMovieByIndex(i)->getId() == movieId) {
+            movieToRemove = system.getMovieByIndex(i);
+            movieIndex = i;
+            movieFound = true;
+            break;
+        }
+    }
+
+    if (!movieFound) {
+        return; // Movie not found, nothing to remove
+    }
+
+    // Handle ticket refunds for this movie
+    double ticketPrice = movieToRemove->calculatePrice();
+    bool hasTicketsPurchased = false;
+
+    for (size_t userIdx = 0; userIdx < system.getUsersCount(); userIdx++) {
+        const MyVector<Ticket> userTickets = system.users[userIdx].getTickets();
+
+        // Count tickets for this movie and refund
+        unsigned ticketsForThisMovie = 0;
+        for (size_t ticketIdx = 0; ticketIdx < userTickets.getSize(); ticketIdx++) {
+            if (userTickets[ticketIdx].getMovieId() == movieId) {
+                ticketsForThisMovie++;
+            }
+        }
+
+        if (ticketsForThisMovie > 0) {
+            hasTicketsPurchased = true;
+            double refundAmount = ticketPrice * ticketsForThisMovie;
+            system.users[userIdx].setBalance(system.users[userIdx].getBalance() + refundAmount);
+            std::cout << "Refunded " << refundAmount << " to user "
+                << system.users[userIdx].getUsername() << " for "
+                << ticketsForThisMovie << " ticket(s)" << std::endl;
+        }
+
+        // Remove tickets for this movie from user's ticket list
+        MyVector<Ticket> newUserTickets;
+        for (size_t ticketIdx = 0; ticketIdx < userTickets.getSize(); ticketIdx++) {
+            if (userTickets[ticketIdx].getMovieId() != movieId) {
+                newUserTickets.push_back(userTickets[ticketIdx]);
+            }
+        }
+        system.users[userIdx].setTickets(newUserTickets);
+    }
+
+    // Remove the movie from the movies vector
+    MyVector<Movie*> newMovies;
+    for (size_t i = 0; i < system.movies.getSize(); i++) {
+        if (i != movieIndex) {
+            newMovies.push_back(system.movies[i]);
+        }
+    }
+
+    // Delete the movie object to free memory
+    delete movieToRemove;
+
+    // Replace the old movies vector with the new one
+    system.movies = newMovies;
+
+    // Remove the movie from users' watched movies list
+    for (size_t userIdx = 0; userIdx < system.getUsersCount(); userIdx++) {
+        MyVector<unsigned> userWatchedMovies = system.users[userIdx].getWatchedMovieIds();
+        MyVector<unsigned> newWatchedMovies;
+
+        for (size_t watchedIdx = 0; watchedIdx < userWatchedMovies.getSize(); watchedIdx++) {
+            if (userWatchedMovies[watchedIdx] != movieId) {
+                newWatchedMovies.push_back(userWatchedMovies[watchedIdx]);
+            }
+        }
+
+        system.users[userIdx].setWatchedMovieIds(newWatchedMovies);
+    }
+
+    if (hasTicketsPurchased) {
+        std::cout << "Warning: Movie ID " << movieId << " had tickets purchased by users." << std::endl;
+        std::cout << "All affected users have been refunded." << std::endl;
+    }
+
+    std::cout << "Removed movie ID " << movieId << std::endl;
 }

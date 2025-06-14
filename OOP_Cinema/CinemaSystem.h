@@ -39,6 +39,22 @@ public:
 
 	void closeHaul(int index);
 
+	Room* getRoomByIdForModification(unsigned roomId) {
+		for (size_t i = 0; i < rooms.getSize(); i++) {
+			if (rooms[i].getID() == roomId) {
+				return &rooms[i];
+			}
+		}
+		return nullptr; // Room not found
+	}
+
+	Room* getModifiableRoomByIndex(size_t index) {
+		if (index >= rooms.getSize()) {
+			return nullptr; // Index out of bounds
+		}
+		return &rooms[index];
+	}
+
 
 
 	CinemaSystem();
